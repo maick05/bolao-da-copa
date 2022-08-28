@@ -48,15 +48,15 @@ export class PushBetService extends AbstractService {
     await this.roundsRepository.updateMatchResult(
       betDTO.idRound,
       betDTO.idTeamHome,
-      betDTO.idTeamOutSide,
+      betDTO.idTeamOutside,
       betDTO.scoreHome,
       betDTO.scoreOutside
     );
 
-    const betsMatch = this.roundsRepository.getBetsByMatch(
-      betDTO.idRound,
-      betDTO.idTeamHome,
-      betDTO.idTeamOutSide
-    );
+    // const betsMatch = this.roundsRepository.getBetsByMatch(
+    //   betDTO.idRound,
+    //   betDTO.idTeamHome,
+    //   betDTO.idTeamOutSide
+    // );
   }
 }

@@ -78,7 +78,7 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
     scoreHome: number,
     scoreOutside: number
   ) {
-    this.updateOne(
+    await this.updateOne(
       {
         id: idRound,
         'matches.idTeamHome': idTeamHome,
@@ -87,7 +87,9 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
       {
         'matches.$.scoreHome': scoreHome,
         'matches.$.scoreOutside': scoreOutside
-      }
+      },
+      {},
+      true
     );
   }
 
