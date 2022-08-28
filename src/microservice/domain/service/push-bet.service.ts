@@ -56,13 +56,15 @@ export class PushBetService extends AbstractService {
     );
 
     const betsMatch = await this.getBetsMyMatch(betDTO);
-
+    console.log('betsMatch');
+    console.log(JSON.stringify(betsMatch));
     const arrScore =
       await this.calculateBetsService.calculateScoreByMatchResult(
         betDTO,
         betsMatch
       );
-
+    console.log('arrScore');
+    console.log(JSON.stringify(arrScore));
     Object.keys(arrScore).forEach(async (keyUser, index) => {
       await this.roundsRepository.updateScoreResult(
         betDTO.idRound,

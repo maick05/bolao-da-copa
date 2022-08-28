@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { CompetitionsMongoose } from '../../adapter/repository/competitions.repository';
 import { RoundsMongoose } from '../../adapter/repository/rounds.repository';
 import { Score } from '../interface/score.interface';
-import { GetBetsDTO } from '../model/dto/get-bets.dto';
 import { SetMatchResultDTO } from '../model/dto/set-match-result.dto';
 import { BetRules } from '../schemas/competitions.schema';
 import { Bet } from '../schemas/rounds.schema';
@@ -26,7 +25,6 @@ export class CalculateBetsScoreService extends AbstractService {
     );
 
     const arrScore = {};
-
     bets.forEach(async (bet: Bet) => {
       arrScore[bet.idUser] = await this.calculateScore(
         bet,

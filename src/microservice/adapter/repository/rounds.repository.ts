@@ -30,12 +30,12 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
         matches: {
           $elemMatch: {
             idTeamHome,
-            idTeamOutside
-          }
-        },
-        'matches.bets': {
-          $elemMatch: {
-            idUser
+            idTeamOutside,
+            bets: {
+              $elemMatch: {
+                idUser
+              }
+            }
           }
         }
       },
@@ -117,9 +117,17 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
     await this.model.updateOne(
       {
         id: idRound,
-        'matches.idTeamHome': idTeamHome,
-        'matches.idTeamOutside': idTeamOutside,
-        'matches.bets.idUser': idUser
+        matches: {
+          $elemMatch: {
+            idTeamHome,
+            idTeamOutside,
+            bets: {
+              $elemMatch: {
+                idUser
+              }
+            }
+          }
+        }
       },
       {
         $set: objSet
@@ -138,12 +146,14 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
     const res = await this.find(
       {
         id: idRound,
-        'matches.idTeamHome': idTeamHome,
-        'matches.idTeamOutside': idTeamOutside
+        matches: {
+          $elemMatch: {
+            idTeamHome,
+            idTeamOutside
+          }
+        }
       },
-      {
-        'matches.bets': 1
-      },
+      { 'matches.$': 1 },
       {},
       false
     );
@@ -162,11 +172,15 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
   async getBetsByCompetition(idCompetition: number) {
     const res = await this.find(
       {
-        idCompetition
+        idCompetition,
+        matches: {
+          $elemMatch: {
+            scoreHome: { $ne: null },
+            scoreOutside: { $ne: null }
+          }
+        }
       },
-      {
-        'matches.bets': 1
-      },
+      { 'matches.$': 1 },
       {},
       false
     );
