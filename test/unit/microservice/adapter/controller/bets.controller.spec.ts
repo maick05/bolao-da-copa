@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BetsController } from '../../../../../src/microservice/adapter/controller/bets.controller';
-import { BetsService } from '../../../../../src/microservice/domain/service/bets.service';
+import { PushBetService } from '../../../../../src/microservice/domain/service/push-bet.service';
 
 describe('AppController', () => {
   let appController: BetsController;
@@ -8,7 +8,7 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [BetsController],
-      providers: [BetsService]
+      providers: [PushBetService]
     }).compile();
 
     appController = app.get<BetsController>(BetsController);

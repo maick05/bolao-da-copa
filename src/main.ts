@@ -1,8 +1,10 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './microservice/adapter/module/bets.module';
+import { AppModule } from './microservice/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3010);
+  const configService = app.get<ConfigService>(ConfigService);
+  await app.listen(configService.get<string>('api.port'));
 }
 bootstrap();

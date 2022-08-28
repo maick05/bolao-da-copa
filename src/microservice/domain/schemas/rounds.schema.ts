@@ -58,6 +58,9 @@ export class Match {
 
   @Prop({ required: false, type: Array })
   bets: Bet[];
+
+  @Prop({ required: false, type: Date })
+  date: Date;
 }
 
 export class Bet {
@@ -79,6 +82,6 @@ export class Bet {
 
 const schema = SchemaFactory.createForClass(Round);
 schema.index({ name: 1, idCompetition: 1, edition: 1 }, { unique: true });
-schema.index({ id: 1 }, { unique: true });
+schema.index({ id: 1, idCompetition: 1, edition: 1 }, { unique: true });
 
 export const RoundsSchema = schema;

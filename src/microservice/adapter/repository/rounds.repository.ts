@@ -14,24 +14,33 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
   }
 
   async pushBets(
+    idCompetition: number,
+    edition: number,
     idRound: number,
     idTeamHome: number,
     idTeamOutSide: number,
     bet: Bet
   ) {
     bet.dateTime = new Date();
-    this.model.updateOne(
+    const res = await this.model.updateOne(
       {
         id: idRound,
+        idCompetition,
+        edition,
         'matches.idTeamHome': idTeamHome,
-        'matches.idTeamOutSide': idTeamOutSide
+        'matches.idTeamOutside': idTeamOutSide
       },
       {
         $push: {
-          bets: bet
+          'matches.$.bets': bet
         }
+      },
+      {
+        strict: false
       }
     );
+    console.log(res);
+    this.logger.log(`Updated Push Completed!`);
   }
 
   async updateMatchResult(
