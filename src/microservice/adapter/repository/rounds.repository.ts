@@ -173,26 +173,29 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
     const res = await this.find(
       {
         idCompetition,
-        matches: {
-          $elemMatch: {
-            scoreHome: { $ne: null },
-            scoreOutside: { $ne: null }
-          }
-        }
+        'matches.scoreHome': { $gt: -1 },
+        'matches.scoreOutside': { $gt: -1 }
       },
-      { 'matches.$': 1 },
+      { matches: 1 },
       {},
       false
     );
-
-    return res.map((round: Round) => {
-      return round.matches
+    console.log('res -->');
+    console.log(res[0].matches);
+    const arr = [];
+    res.forEach((round: Round) => {
+      round.matches
         .filter((matchFilter) => {
           return matchFilter.bets.length > 0;
         })
-        .map((match: Match) => {
-          return match.bets;
+        .forEach((match: Match) => {
+          arr.push(...match.bets);
         });
-    })[0][0];
+    });
+
+    console.log('arr -->');
+    console.log(arr);
+
+    return arr;
   }
 }

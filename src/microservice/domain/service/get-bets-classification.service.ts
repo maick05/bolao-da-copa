@@ -17,19 +17,26 @@ export class GetBetsClassificationService extends AbstractService {
   }
 
   async getClassificationBets(bet: GetBetsClassificationDTO) {
-    const arrSum = [];
+    const arrSum = {};
 
     const bets = await this.roundsRepository.getBetsByCompetition(
       bet.idCompetition
     );
 
+    console.log('bets');
+    console.log(bets);
+
     bets.forEach((bet: Bet) => {
       if (typeof arrSum[bet.idUser] == 'undefined') arrSum[bet.idUser] = 0;
       arrSum[bet.idUser] += bet.scoreBet;
     });
-
-    return arrSum.filter((item) => item != null);
+    console.log('arrSum');
+    console.log(arrSum);
+    return Object.keys(arrSum).map((index) => {
+      return {
+        user: 'any - ' + index,
+        points: arrSum[index]
+      };
+    });
   }
-
-  getBetsResults;
 }
