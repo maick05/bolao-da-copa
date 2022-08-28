@@ -1,6 +1,7 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { RoundsMongoose } from '../../adapter/repository/rounds.repository';
+import { GetBetsDTO } from '../model/dto/get-bets.dto';
 import { PushBetDTO } from '../model/dto/push-bet.dto';
 import { SetMatchResultDTO } from '../model/dto/set-match-result.dto';
 import { Bet } from '../schemas/rounds.schema';
@@ -34,6 +35,7 @@ export class PushBetService extends AbstractService {
     bet.idUser = betDTO.idUser;
     bet.scoreHome = betDTO.scoreHome;
     bet.scoreOutside = betDTO.scoreOutside;
+    bet.scoreBet = null;
     return this.roundsRepository.pushBets(
       betDTO.idCompetition,
       betDTO.edition,
@@ -53,10 +55,31 @@ export class PushBetService extends AbstractService {
       betDTO.scoreOutside
     );
 
-    // const betsMatch = this.roundsRepository.getBetsByMatch(
-    //   betDTO.idRound,
-    //   betDTO.idTeamHome,
-    //   betDTO.idTeamOutSide
-    // );
+    const betsMatch = await this.getBetsMyMatch(betDTO);
+
+    const arrScore =
+      await this.calculateBetsService.calculateScoreByMatchResult(
+        betDTO,
+        betsMatch
+      );
+
+    Object.keys(arrScore).forEach(async (keyUser, index) => {
+      await this.roundsRepository.updateScoreResult(
+        betDTO.idRound,
+        betDTO.idTeamHome,
+        betDTO.idTeamOutside,
+        Number(keyUser),
+        index,
+        arrScore[keyUser]
+      );
+    });
+  }
+
+  async getBetsMyMatch(betDTO: GetBetsDTO): Promise<Bet[]> {
+    return await this.roundsRepository.getBetsByMatch(
+      betDTO.idRound,
+      betDTO.idTeamHome,
+      betDTO.idTeamOutside
+    );
   }
 }

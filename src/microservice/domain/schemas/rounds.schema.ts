@@ -25,7 +25,7 @@ export class Round {
   edition: number;
 
   @Prop({ required: false, type: Array })
-  RoundsCode: Match[];
+  matches: Match[];
 }
 
 export class Match {

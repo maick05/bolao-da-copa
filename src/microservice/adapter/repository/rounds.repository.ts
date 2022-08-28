@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Bet, Round, RoundDocument } from '../../domain/schemas/rounds.schema';
+import {
+  Bet,
+  Match,
+  Round,
+  RoundDocument
+} from '../../domain/schemas/rounds.schema';
 import { MongooseRepository } from '@devseeder/nestjs-microservices-commons';
 
 @Injectable()
@@ -19,7 +24,7 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
     idTeamHome: number,
     idTeamOutside: number
   ) {
-    return this.find(
+    const res = await this.find(
       {
         id: idRound,
         matches: {
@@ -40,6 +45,8 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
       {},
       false
     );
+
+    return res;
   }
 
   async pushBets(
@@ -78,18 +85,48 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
     scoreHome: number,
     scoreOutside: number
   ) {
-    await this.updateOne(
+    await this.model.updateOne(
       {
         id: idRound,
         'matches.idTeamHome': idTeamHome,
         'matches.idTeamOutside': idTeamOutside
       },
       {
-        'matches.$.scoreHome': scoreHome,
-        'matches.$.scoreOutside': scoreOutside
+        $set: {
+          'matches.$.scoreHome': scoreHome,
+          'matches.$.scoreOutside': scoreOutside
+        }
       },
-      {},
-      true
+      {
+        strict: false
+      }
+    );
+  }
+
+  async updateScoreResult(
+    idRound: number,
+    idTeamHome: number,
+    idTeamOutside: number,
+    idUser: number,
+    index: number,
+    scoreBet: number
+  ) {
+    const updateAttr = `matches.$.bets.${index}.scoreBet`;
+    const objSet = {};
+    objSet[updateAttr] = scoreBet;
+    await this.model.updateOne(
+      {
+        id: idRound,
+        'matches.idTeamHome': idTeamHome,
+        'matches.idTeamOutside': idTeamOutside,
+        'matches.bets.idUser': idUser
+      },
+      {
+        $set: objSet
+      },
+      {
+        strict: false
+      }
     );
   }
 
@@ -97,8 +134,8 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
     idRound: number,
     idTeamHome: number,
     idTeamOutside: number
-  ) {
-    return this.find(
+  ): Promise<any[]> {
+    const res = await this.find(
       {
         id: idRound,
         'matches.idTeamHome': idTeamHome,
@@ -106,7 +143,36 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
       },
       {
         'matches.bets': 1
+      },
+      {},
+      false
+    );
+
+    return res.map((round: Round) => {
+      return round.matches
+        .filter((matchFilter) => {
+          return matchFilter.bets.length > 0;
+        })
+        .map((match: Match) => {
+          return match.bets;
+        });
+    })[0][0];
+  }
+
+  async getBetsByCompetition(idCompetition: number) {
+    const res = await this.find(
+      {
+        idCompetition
+      },
+      {
+        'matches.bets': 1
       }
     );
+
+    return res.map((round: Round) => {
+      return round.matches.map((match: Match) => {
+        return match.bets;
+      });
+    });
   }
 }
