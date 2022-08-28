@@ -166,13 +166,19 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
       },
       {
         'matches.bets': 1
-      }
+      },
+      {},
+      false
     );
 
     return res.map((round: Round) => {
-      return round.matches.map((match: Match) => {
-        return match.bets;
-      });
-    });
+      return round.matches
+        .filter((matchFilter) => {
+          return matchFilter.bets.length > 0;
+        })
+        .map((match: Match) => {
+          return match.bets;
+        });
+    })[0][0];
   }
 }

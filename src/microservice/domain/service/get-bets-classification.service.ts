@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CompetitionsMongoose } from '../../adapter/repository/competitions.repository';
 import { RoundsMongoose } from '../../adapter/repository/rounds.repository';
 import { GetBetsClassificationDTO } from '../model/dto/get-bets-classification.dto';
+import { Bet } from '../schemas/rounds.schema';
 import { CalculateBetsScoreService } from './calculate-bets-score.service';
 
 @Injectable()
@@ -22,7 +23,12 @@ export class GetBetsClassificationService extends AbstractService {
       bet.idCompetition
     );
 
-    return [];
+    bets.forEach((bet: Bet) => {
+      if (typeof arrSum[bet.idUser] == 'undefined') arrSum[bet.idUser] = 0;
+      arrSum[bet.idUser] += bet.scoreBet;
+    });
+
+    return arrSum.filter((item) => item != null);
   }
 
   getBetsResults;

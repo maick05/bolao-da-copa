@@ -23,7 +23,7 @@ export class BetsController {
     return this.betService.setMatchResult(bet);
   }
 
-  @Get('/bets/:idCompetition/:edition')
+  @Get('/classification/:idCompetition/:edition')
   getBetsClassification(
     @Param() bet: GetBetsClassificationDTO
   ): Promise<any[]> {
