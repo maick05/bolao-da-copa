@@ -180,8 +180,7 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
       {},
       false
     );
-    console.log('res -->');
-    console.log(res[0].matches);
+
     const arr = [];
     res.forEach((round: Round) => {
       round.matches
@@ -192,9 +191,6 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
           arr.push(...match.bets);
         });
     });
-
-    console.log('arr -->');
-    console.log(arr);
 
     return arr;
   }
