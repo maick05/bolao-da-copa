@@ -13,12 +13,41 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
     super(model);
   }
 
+  async getBetsByUserAndMatch(
+    idUser: number,
+    idRound: number,
+    idTeamHome: number,
+    idTeamOutside: number
+  ) {
+    return this.find(
+      {
+        id: idRound,
+        matches: {
+          $elemMatch: {
+            idTeamHome,
+            idTeamOutside
+          }
+        },
+        'matches.bets': {
+          $elemMatch: {
+            idUser
+          }
+        }
+      },
+      {
+        'matches.bets': 1
+      },
+      {},
+      false
+    );
+  }
+
   async pushBets(
     idCompetition: number,
     edition: number,
     idRound: number,
     idTeamHome: number,
-    idTeamOutSide: number,
+    idTeamOutside: number,
     bet: Bet
   ) {
     bet.dateTime = new Date();
@@ -28,7 +57,7 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
         idCompetition,
         edition,
         'matches.idTeamHome': idTeamHome,
-        'matches.idTeamOutside': idTeamOutSide
+        'matches.idTeamOutside': idTeamOutside
       },
       {
         $push: {
@@ -39,14 +68,13 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
         strict: false
       }
     );
-    console.log(res);
-    this.logger.log(`Updated Push Completed!`);
+    this.logger.log(`Update Push Completed!`);
   }
 
   async updateMatchResult(
     idRound: number,
     idTeamHome: number,
-    idTeamOutSide: number,
+    idTeamOutside: number,
     scoreHome: number,
     scoreOutside: number
   ) {
@@ -54,11 +82,11 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
       {
         id: idRound,
         'matches.idTeamHome': idTeamHome,
-        'matches.idTeamOutSide': idTeamOutSide
+        'matches.idTeamOutside': idTeamOutside
       },
       {
-        'matches.scoreHome': scoreHome,
-        'matches.scoreOutside': scoreOutside
+        'matches.$.scoreHome': scoreHome,
+        'matches.$.scoreOutside': scoreOutside
       }
     );
   }
@@ -66,13 +94,13 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
   async getBetsByMatch(
     idRound: number,
     idTeamHome: number,
-    idTeamOutSide: number
+    idTeamOutside: number
   ) {
     return this.find(
       {
         id: idRound,
         'matches.idTeamHome': idTeamHome,
-        'matches.idTeamOutSide': idTeamOutSide
+        'matches.idTeamOutside': idTeamOutside
       },
       {
         'matches.bets': 1

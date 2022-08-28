@@ -1,5 +1,5 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { RoundsMongoose } from '../../adapter/repository/rounds.repository';
 import { PushBetDTO } from '../model/dto/push-bet.dto';
 import { SetMatchResultDTO } from '../model/dto/set-match-result.dto';
@@ -15,7 +15,20 @@ export class PushBetService extends AbstractService {
     super();
   }
 
-  pushBet(betDTO: PushBetDTO) {
+  async pushBet(betDTO: PushBetDTO) {
+    const betsCheck = await this.roundsRepository.getBetsByUserAndMatch(
+      betDTO.idUser,
+      betDTO.idRound,
+      betDTO.idTeamHome,
+      betDTO.idTeamOutside
+    );
+
+    if (betsCheck.length > 0) {
+      throw new BadRequestException(
+        'There is already a bet fot this match and user!'
+      );
+    }
+
     this.logger.log(`Pushing bets...`);
     const bet = new Bet();
     bet.idUser = betDTO.idUser;
@@ -26,7 +39,7 @@ export class PushBetService extends AbstractService {
       betDTO.edition,
       betDTO.idRound,
       betDTO.idTeamHome,
-      betDTO.idTeamOutSide,
+      betDTO.idTeamOutside,
       bet
     );
   }

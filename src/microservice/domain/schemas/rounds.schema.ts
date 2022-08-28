@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 
 export type RoundDocument = Round & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection: 'rounds', strictQuery: false })
 export class Round {
   @Prop({ required: true })
   id: number;

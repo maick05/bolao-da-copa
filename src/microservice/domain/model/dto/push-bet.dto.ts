@@ -4,7 +4,7 @@ export class PushBetDTO {
   edition: number;
   idRound: number;
   idTeamHome: number;
-  idTeamOutSide: number;
+  idTeamOutside: number;
   scoreHome: number;
   scoreOutside: number;
   penaltWinner?: number;
