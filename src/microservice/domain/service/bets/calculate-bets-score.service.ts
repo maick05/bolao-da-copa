@@ -1,11 +1,11 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable } from '@nestjs/common';
-import { CompetitionsMongoose } from '../../adapter/repository/competitions.repository';
-import { RoundsMongoose } from '../../adapter/repository/rounds.repository';
-import { Score } from '../interface/score.interface';
-import { SetMatchResultDTO } from '../model/dto/set-match-result.dto';
-import { BetRules } from '../schemas/competitions.schema';
-import { Bet } from '../schemas/rounds.schema';
+import { CompetitionsMongoose } from '../../../adapter/repository/competitions.repository';
+import { RoundsMongoose } from '../../../adapter/repository/rounds.repository';
+import { Score } from '../../interface/score.interface';
+import { SetMatchResultDTO } from '../../model/dto/set-match-result.dto';
+import { BetRules } from '../../schemas/competitions.schema';
+import { Bet } from '../../schemas/rounds.schema';
 
 @Injectable()
 export class CalculateBetsScoreService extends AbstractService {
