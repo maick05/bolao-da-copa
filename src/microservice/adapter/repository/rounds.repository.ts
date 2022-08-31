@@ -194,4 +194,22 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
 
     return arr;
   }
+
+  async getActualRound(idCompetition: number, edition: number) {
+    const response = await this.find(
+      {
+        idCompetition,
+        edition,
+        'matches.scoreHome': { $gt: -1 },
+        'matches.scoreOutside': { $gt: -1 }
+      },
+      {
+        matches: 1
+      },
+      {},
+      false
+    );
+
+    return response;
+  }
 }

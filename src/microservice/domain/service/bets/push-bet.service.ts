@@ -1,8 +1,8 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { RoundsMongoose } from '../../../adapter/repository/rounds.repository';
-import { GetBetsDTO } from '../../model/dto/get-bets.dto';
-import { PushBetDTO } from '../../model/dto/push-bet.dto';
+import { GetBetsDTO } from '../../model/dto/bets/get-bets.dto';
+import { PushBetDTO } from '../../model/dto/bets/push-bet.dto';
 import { SetMatchResultDTO } from '../../model/dto/set-match-result.dto';
 import { Bet } from '../../schemas/rounds.schema';
 import { CalculateBetsScoreService } from './calculate-bets-score.service';

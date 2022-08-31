@@ -2,7 +2,7 @@ import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CompetitionsMongoose } from '../../../adapter/repository/competitions.repository';
 import { RoundsMongoose } from '../../../adapter/repository/rounds.repository';
-import { GetBetsClassificationDTO } from '../../model/dto/get-bets-classification.dto';
+import { GetBetsClassificationDTO } from '../../model/dto/bets/get-bets-classification.dto';
 import { Bet } from '../../schemas/rounds.schema';
 import { UsersService } from '../users/users.service';
 import { CalculateBetsScoreService } from './calculate-bets-score.service';
