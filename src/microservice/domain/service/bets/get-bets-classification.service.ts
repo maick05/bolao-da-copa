@@ -1,7 +1,7 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { BetsMongoose } from '../../../adapter/repository/rounds/bets.repository';
 import { CompetitionsMongoose } from '../../../adapter/repository/competitions.repository';
-import { RoundsMongoose } from '../../../adapter/repository/rounds.repository';
 import { GetBetsClassificationDTO } from '../../model/dto/bets/get-bets-classification.dto';
 import { Bet } from '../../schemas/rounds.schema';
 import { UsersService } from '../users/users.service';
@@ -10,7 +10,7 @@ import { CalculateBetsScoreService } from './calculate-bets-score.service';
 @Injectable()
 export class GetBetsClassificationService extends AbstractService {
   constructor(
-    protected readonly roundsRepository: RoundsMongoose,
+    protected readonly betsRepository: BetsMongoose,
     protected readonly competitionsRepository: CompetitionsMongoose,
     protected readonly calculateBetsService: CalculateBetsScoreService,
     protected readonly usersService: UsersService
@@ -21,7 +21,7 @@ export class GetBetsClassificationService extends AbstractService {
   async getClassificationBets(bet: GetBetsClassificationDTO) {
     const arrSum = {};
 
-    const bets = await this.roundsRepository.getBetsByCompetition(
+    const bets = await this.betsRepository.getBetsByCompetition(
       bet.idCompetition
     );
 

@@ -6,6 +6,9 @@ import { GetBetsClassificationService } from '../../domain/service/bets/get-bets
 import { UsersModule } from './users.module';
 import { CompetitionsModule } from './competitions.module';
 import { RoundsModule } from './rounds.module';
+import { BetsMongoose } from '../repository/rounds/bets.repository';
+import { MatchesMongoose } from '../repository/rounds/matches.repository';
+import { GetBetsMatchService } from '../../domain/service/bets/get-bets-match.service';
 
 @Module({
   imports: [RoundsModule, CompetitionsModule, UsersModule],
@@ -13,7 +16,10 @@ import { RoundsModule } from './rounds.module';
   providers: [
     PushBetService,
     CalculateBetsScoreService,
-    GetBetsClassificationService
+    GetBetsClassificationService,
+    BetsMongoose,
+    MatchesMongoose,
+    GetBetsMatchService
   ]
 })
 export class BetsModule {}

@@ -1,8 +1,8 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { RoundsMongoose } from '../../../adapter/repository/rounds.repository';
+import { RoundsMongoose } from '../../../adapter/repository/rounds/rounds.repository';
 
-import { GetActualRoundDTO } from '../../model/dto/rounds/get-actual-round.dto';
+import { GetRoundDTO } from '../../model/dto/rounds/get-round.dto';
 import { Match, Round } from '../../schemas/rounds.schema';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class GetActualRoundService extends AbstractService {
     super();
   }
 
-  async getActualRound(getRoundDTO: GetActualRoundDTO): Promise<any> {
+  async getActualRound(getRoundDTO: GetRoundDTO): Promise<any> {
     const round = await this.getRound(getRoundDTO);
 
     const matches = this.sortAndSplitMatches(round.matches);
@@ -19,7 +19,7 @@ export class GetActualRoundService extends AbstractService {
     return matches;
   }
 
-  async getRound(getRoundDTO: GetActualRoundDTO): Promise<Round> {
+  async getRound(getRoundDTO: GetRoundDTO): Promise<Round> {
     let round = await this.roundsRepository.getActualRound(
       getRoundDTO.idCompetition,
       getRoundDTO.edition
