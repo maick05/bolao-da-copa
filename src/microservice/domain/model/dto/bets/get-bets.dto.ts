@@ -1,4 +1,6 @@
-export class GetBetsDTO {
+import { DTO } from '@devseeder/nestjs-microservices-commons';
+
+export class GetBetsDTO extends DTO {
   idCompetition: number;
   edition: number;
   idRound: number;

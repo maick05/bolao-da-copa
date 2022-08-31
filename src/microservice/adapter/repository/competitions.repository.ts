@@ -21,7 +21,7 @@ export class CompetitionsMongoose extends MongooseRepository<
   }
 
   async getRulesCompetition(idCompetition: number): Promise<BetRules> {
-    const result = await this.find(
+    const result = await this.model.findOne(
       {
         id: idCompetition
       },
@@ -30,6 +30,6 @@ export class CompetitionsMongoose extends MongooseRepository<
       }
     );
 
-    return result[0].rules;
+    return result.rules;
   }
 }

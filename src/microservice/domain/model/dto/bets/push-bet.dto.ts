@@ -1,4 +1,6 @@
-export class PushBetDTO {
+import { DTO } from '@devseeder/nestjs-microservices-commons';
+
+export class PushBetDTO extends DTO {
   idUser: number;
   idCompetition: number;
   edition: number;
