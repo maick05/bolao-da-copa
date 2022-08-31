@@ -4,15 +4,19 @@ import { RoundsMongoose } from '../../../adapter/repository/rounds/rounds.reposi
 
 import { GetRoundDTO } from '../../model/dto/rounds/get-round.dto';
 import { Match, Round } from '../../schemas/rounds.schema';
+import { JoinService } from '../join.service';
 
 @Injectable()
 export class GetRoundsByCompetitionService extends AbstractService {
-  constructor(protected readonly roundsRepository: RoundsMongoose) {
+  constructor(
+    protected readonly roundsRepository: RoundsMongoose,
+    protected readonly joinService: JoinService
+  ) {
     super();
   }
 
   async getRoundsByCompetition(getRoundDTO: GetRoundDTO): Promise<any> {
-    return this.roundsRepository.find(
+    const rounds = await this.roundsRepository.find(
       {
         idCompetition: getRoundDTO.idCompetition,
         edition: getRoundDTO.edition
@@ -21,6 +25,7 @@ export class GetRoundsByCompetitionService extends AbstractService {
       { id: 1 },
       false
     );
+    return this.joinService.joinRounds(rounds);
   }
 
   async getMatchesByRound(getRoundDTO: GetRoundDTO): Promise<any> {
@@ -39,7 +44,9 @@ export class GetRoundsByCompetitionService extends AbstractService {
       throw new NotFoundException('Round not found');
     }
 
-    return res[0].matches.sort(function (a, b) {
+    const matches = await this.joinService.joinMatchesAndBets(res[0].matches);
+
+    return matches.sort(function (a, b) {
       return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
   }

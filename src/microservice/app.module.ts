@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import configuration from '../config/configuration';
 import { BetsModule } from './adapter/module/bets.module';
+import { TeamsModule } from './adapter/module/teams.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { BetsModule } from './adapter/module/bets.module';
       isGlobal: true,
       load: [configuration]
     }),
+    TeamsModule,
     BetsModule
   ],
   controllers: [],

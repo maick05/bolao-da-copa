@@ -4,19 +4,21 @@ import { RoundsMongoose } from '../../../adapter/repository/rounds/rounds.reposi
 
 import { GetRoundDTO } from '../../model/dto/rounds/get-round.dto';
 import { Match, Round } from '../../schemas/rounds.schema';
+import { JoinService } from '../join.service';
 
 @Injectable()
 export class GetActualRoundService extends AbstractService {
-  constructor(protected readonly roundsRepository: RoundsMongoose) {
+  constructor(
+    protected readonly roundsRepository: RoundsMongoose,
+    protected readonly joinService: JoinService
+  ) {
     super();
   }
 
   async getActualRound(getRoundDTO: GetRoundDTO): Promise<any> {
     const round = await this.getRound(getRoundDTO);
-
-    const matches = this.sortAndSplitMatches(round.matches);
-
-    return matches;
+    const matches = await this.joinService.joinMatchesAndBets(round.matches);
+    return this.sortAndSplitMatches(matches);
   }
 
   async getRound(getRoundDTO: GetRoundDTO): Promise<Round> {

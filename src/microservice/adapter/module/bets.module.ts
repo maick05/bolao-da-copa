@@ -9,6 +9,7 @@ import { RoundsModule } from './rounds.module';
 import { BetsMongoose } from '../repository/rounds/bets.repository';
 import { MatchesMongoose } from '../repository/rounds/matches.repository';
 import { GetBetsMatchService } from '../../domain/service/bets/get-bets-match.service';
+import { JoinService } from '../../domain/service/join.service';
 
 @Module({
   imports: [RoundsModule, CompetitionsModule, UsersModule],

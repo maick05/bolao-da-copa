@@ -17,4 +17,12 @@ export class UsersMongoose extends MongooseRepository<User, UserDocument> {
     const result = await this.model.findOne({ id });
     return result;
   }
+
+  async getInfoTeamById(id: number, field = 'name'): Promise<any> {
+    const select = {};
+    select[field] = 1;
+
+    const result = await this.model.findOne({ id }, select);
+    return result[field];
+  }
 }
