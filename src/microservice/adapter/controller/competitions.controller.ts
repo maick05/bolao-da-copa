@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { GetRulesService } from 'src/microservice/domain/service/rules/get-rules.service';
+import { GetRulesService } from '../../domain/service/rules/get-rules.service';
 
 @Controller('competitions')
 export class CompetitionsController {

@@ -1,10 +1,6 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CompetitionsMongoose } from 'src/microservice/adapter/repository/competitions.repository';
-import { GetCompetitionDTO } from '../../model/dto/competition/get-competition.dto';
-
-import { GetRoundDTO } from '../../model/dto/rounds/get-round.dto';
-import { Match, Round } from '../../schemas/rounds.schema';
+import { CompetitionsMongoose } from '../../../adapter/repository/competitions.repository';
 
 @Injectable()
 export class GetRulesService extends AbstractService {

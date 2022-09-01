@@ -5,7 +5,7 @@ import { User, UsersSchema } from '../../domain/schemas/users.schema';
 import { UsersMongoose } from '../repository/users.repository';
 import { ClientAuthService } from '../repository/client/client-auth.service';
 import { ConfigModule } from '@nestjs/config';
-import configuration from 'src/config/configuration';
+import configuration from '../../../config/configuration';
 import { HttpModule } from '@nestjs/axios';
 import { UsersController } from '../controller/users.controller';
 

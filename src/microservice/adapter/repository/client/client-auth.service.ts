@@ -2,8 +2,8 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { UserAuth } from 'src/microservice/domain/model/auth/user-auth.model';
-import { HttpClientService } from 'src/microservice/domain/service/client/http-client.service';
+import { UserAuth } from '../../../domain/model/auth/user-auth.model';
+import { HttpClientService } from '../../../domain/service/client/http-client.service';
 
 @Injectable()
 export class ClientAuthService extends HttpClientService {

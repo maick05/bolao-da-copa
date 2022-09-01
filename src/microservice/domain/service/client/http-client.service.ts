@@ -1,10 +1,7 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { response } from 'express';
-import { catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
-import { UserAuth } from 'src/microservice/domain/model/auth/user-auth.model';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export abstract class HttpClientService extends AbstractService {
