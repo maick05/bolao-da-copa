@@ -24,14 +24,26 @@ export class GetBetsClassificationService extends AbstractService {
   }
 
   async getClassificationBets(idLeague: number) {
-    const { idCompetition, edition } = await this.getLeague(idLeague);
+    const { idCompetition, edition, userIds } = await this.getLeague(idLeague);
 
     const bets = await this.betsRepository.getBetsByCompetition(
       idCompetition,
       edition
     );
 
-    return this.generateClassificationBets(bets);
+    return this.generateClassificationBets(bets, userIds);
+  }
+
+  async getClassificationRoundBets(idLeague: number, idRound: number) {
+    const { idCompetition, edition, userIds } = await this.getLeague(idLeague);
+
+    const bets = await this.betsRepository.getBetsByCompetitionAndRound(
+      idCompetition,
+      edition,
+      idRound
+    );
+
+    return this.generateClassificationBets(bets, userIds);
   }
 
   async getLeague(idLeague: number) {
@@ -42,25 +54,18 @@ export class GetBetsClassificationService extends AbstractService {
     return league;
   }
 
-  async getClassificationRoundBets(idLeague: number, idRound: number) {
-    const { idCompetition, edition } = await this.getLeague(idLeague);
-
-    const bets = await this.betsRepository.getBetsByCompetitionAndRound(
-      idCompetition,
-      edition,
-      idRound
-    );
-
-    return this.generateClassificationBets(bets);
-  }
-
-  private async generateClassificationBets(bets: Bet[]): Promise<Array<any>> {
+  private async generateClassificationBets(
+    bets: Bet[],
+    userIds: number[]
+  ): Promise<Array<any>> {
     const arrSum = {};
 
-    bets.forEach((bet: Bet) => {
-      if (typeof arrSum[bet.idUser] == 'undefined') arrSum[bet.idUser] = 0;
-      arrSum[bet.idUser] += bet.scoreBet;
-    });
+    bets
+      .filter((bet) => userIds.indexOf(bet.idUser) !== -1)
+      .forEach((bet: Bet) => {
+        if (typeof arrSum[bet.idUser] == 'undefined') arrSum[bet.idUser] = 0;
+        arrSum[bet.idUser] += bet.scoreBet;
+      });
 
     const arrSumUser = Object.keys(arrSum)
       .map((index) => {
