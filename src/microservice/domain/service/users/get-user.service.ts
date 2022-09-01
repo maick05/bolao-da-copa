@@ -9,6 +9,10 @@ export class GetUserService extends UsersService {
     super(usersRepository);
   }
 
+  async getUserById(id: number): Promise<User> {
+    return this.usersRepository.getUserById(id);
+  }
+
   async searchUserByUsername(name: string): Promise<User[]> {
     const regexName = new RegExp(name, 'i');
     return this.usersRepository.find(
@@ -16,7 +20,8 @@ export class GetUserService extends UsersService {
         $or: [
           { name: { $regex: regexName } },
           { username: { $regex: regexName } }
-        ]
+        ],
+        active: true
       },
       { username: 1, name: 1 },
       {},

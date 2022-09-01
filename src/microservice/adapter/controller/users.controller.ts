@@ -16,6 +16,11 @@ export class UsersController {
     return this.createUserService.createUser(user);
   }
 
+  @Get('/details/:id')
+  getUserById(@Param('id') id: number): Promise<User> {
+    return this.getUserService.getUserById(id);
+  }
+
   @Get('/search/:name')
   getUser(@Param('name') name: string): Promise<User[]> {
     return this.getUserService.searchUserByUsername(name);
