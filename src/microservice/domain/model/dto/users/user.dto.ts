@@ -5,3 +5,7 @@ export class UserDTO extends DTO {
   username: string;
   password: string;
 }
+
+export class UpdateUserDTO extends DTO {
+  name: string;
+}

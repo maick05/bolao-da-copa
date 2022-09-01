@@ -9,6 +9,7 @@ import configuration from '../../../config/configuration';
 import { HttpModule } from '@nestjs/axios';
 import { UsersController } from '../controller/users.controller';
 import { GetUserService } from 'src/microservice/domain/service/users/get-user.service';
+import { UpdateUserService } from 'src/microservice/domain/service/users/update-user.service';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { GetUserService } from 'src/microservice/domain/service/users/get-user.s
     UsersMongoose,
     CreateUserService,
     ClientAuthService,
-    GetUserService
+    GetUserService,
+    UpdateUserService
   ],
   exports: [UsersMongoose, CreateUserService, ClientAuthService]
 })
