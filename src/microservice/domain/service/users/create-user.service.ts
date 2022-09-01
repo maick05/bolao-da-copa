@@ -1,4 +1,3 @@
-import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientAuthService } from '../../../adapter/repository/client/client-auth.service';
@@ -7,19 +6,16 @@ import { EnumScopes } from '../../enum/enum-scopes.enum';
 import { UserAuth } from '../../model/auth/user-auth.model';
 import { UserDTO } from '../../model/dto/users/user.dto';
 import { User } from '../../schemas/users.schema';
+import { UsersService } from './user.service';
 
 @Injectable()
-export class UsersService extends AbstractService {
+export class CreateUserService extends UsersService {
   constructor(
     protected readonly usersRepository: UsersMongoose,
     protected readonly clientAuthService: ClientAuthService,
     protected readonly configService: ConfigService
   ) {
-    super();
-  }
-
-  async getUserById(id: number): Promise<User> {
-    return this.usersRepository.getUserById(id);
+    super(usersRepository);
   }
 
   async createUser(user: UserDTO): Promise<void> {

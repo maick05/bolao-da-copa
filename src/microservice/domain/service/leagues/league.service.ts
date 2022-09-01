@@ -2,13 +2,13 @@ import { NotFoundException } from '@devseeder/microservices-exceptions';
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { LeaguesMongoose } from 'src/microservice/adapter/repository/leagues.repository';
-import { UsersService } from '../users/users.service';
+import { CreateUserService } from '../users/create-user.service';
 
 @Injectable()
 export abstract class LeagueService extends AbstractService {
   constructor(
     protected readonly leagueRepository: LeaguesMongoose,
-    protected readonly userService: UsersService
+    protected readonly userService: CreateUserService
   ) {
     super();
   }

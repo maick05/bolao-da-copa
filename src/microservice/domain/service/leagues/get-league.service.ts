@@ -1,14 +1,14 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { League } from '../../schemas/leagues.schema';
-import { UsersService } from '../users/users.service';
+import { CreateUserService } from '../users/create-user.service';
 import { LeagueService } from './league.service';
 
 @Injectable()
 export class GetLeagueService extends LeagueService {
   constructor(
     protected readonly leagueRepository: LeaguesMongoose,
-    protected readonly userService: UsersService
+    protected readonly userService: CreateUserService
   ) {
     super(leagueRepository, userService);
   }

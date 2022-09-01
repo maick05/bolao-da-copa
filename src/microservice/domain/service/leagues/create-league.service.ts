@@ -3,7 +3,7 @@ import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository'
 import { CreateLeagueDTO } from '../../model/dto/leagues/create-league.dto';
 import { League } from '../../schemas/leagues.schema';
 import { GetRulesService } from '../rules/get-rules.service';
-import { UsersService } from '../users/users.service';
+import { CreateUserService } from '../users/create-user.service';
 import { LeagueService } from './league.service';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class CreateLeagueService extends LeagueService {
   constructor(
     protected readonly leagueRepository: LeaguesMongoose,
     private readonly getRulesService: GetRulesService,
-    protected readonly userService: UsersService
+    protected readonly userService: CreateUserService
   ) {
     super(leagueRepository, userService);
   }

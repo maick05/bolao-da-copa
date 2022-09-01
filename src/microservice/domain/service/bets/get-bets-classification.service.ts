@@ -7,7 +7,7 @@ import {
   GetBetsClassificationRoundDTO
 } from '../../model/dto/bets/get-bets-classification.dto';
 import { Bet } from '../../schemas/rounds.schema';
-import { UsersService } from '../users/users.service';
+import { CreateUserService } from '../users/create-user.service';
 import { CalculateBetsScoreService } from './calculate-bets-score.service';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 
@@ -18,7 +18,7 @@ export class GetBetsClassificationService extends AbstractService {
     protected readonly leaguesRepository: LeaguesMongoose,
     protected readonly competitionsRepository: CompetitionsMongoose,
     protected readonly calculateBetsService: CalculateBetsScoreService,
-    protected readonly usersService: UsersService
+    protected readonly usersService: CreateUserService
   ) {
     super();
   }
