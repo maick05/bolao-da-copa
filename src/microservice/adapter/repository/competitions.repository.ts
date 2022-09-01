@@ -29,7 +29,6 @@ export class CompetitionsMongoose extends MongooseRepository<
         rules: 1
       }
     );
-
     return result.rules;
   }
 }

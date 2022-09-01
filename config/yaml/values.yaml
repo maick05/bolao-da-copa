@@ -4,8 +4,11 @@ database:
 auth:
   jwt:
     secret: ${JWT_SECRET}
+  url: http://auth.devseeder.com
+  clientToken: ${AUTH_TOKEN}
 api:
   port: ${API_PORT}
 doc:
   version: 0.0.1
   name: 'Bolão da Copa API'
+  projectKey: 'BOLAO_DA_COPA'

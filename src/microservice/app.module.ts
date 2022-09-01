@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -18,6 +19,7 @@ import { TeamsModule } from './adapter/module/teams.module';
       isGlobal: true,
       load: [configuration]
     }),
+    HttpModule,
     TeamsModule,
     BetsModule
   ],

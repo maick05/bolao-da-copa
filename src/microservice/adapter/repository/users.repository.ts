@@ -25,4 +25,15 @@ export class UsersMongoose extends MongooseRepository<User, UserDocument> {
     const result = await this.model.findOne({ id }, select);
     return result[field];
   }
+
+  async getLastId(): Promise<number> {
+    const last = await this.model
+      .findOne({}, { id: 1 })
+      .sort({ id: -1 })
+      .limit(1);
+
+    if (!last) return 1;
+
+    return last.id;
+  }
 }
