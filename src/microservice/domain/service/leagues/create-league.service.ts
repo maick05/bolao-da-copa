@@ -1,24 +1,19 @@
-import { AbstractService } from '@devseeder/nestjs-microservices-commons';
-import {
-  BadRequestException,
-  Injectable,
-  NotAcceptableException,
-  NotFoundException
-} from '@nestjs/common';
-import { LeaguesMongoose } from 'src/microservice/adapter/repository/leagues.repository';
+import { Injectable, NotAcceptableException } from '@nestjs/common';
+import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { CreateLeagueDTO } from '../../model/dto/leagues/create-league.dto';
 import { League } from '../../schemas/leagues.schema';
 import { GetRulesService } from '../rules/get-rules.service';
 import { UsersService } from '../users/users.service';
+import { LeagueService } from './league.service';
 
 @Injectable()
-export class CreateLeagueService extends AbstractService {
+export class CreateLeagueService extends LeagueService {
   constructor(
     protected readonly leagueRepository: LeaguesMongoose,
     private readonly getRulesService: GetRulesService,
-    private readonly userService: UsersService
+    protected readonly userService: UsersService
   ) {
-    super();
+    super(leagueRepository, userService);
   }
 
   async createLeague(league: CreateLeagueDTO): Promise<any> {
@@ -35,16 +30,5 @@ export class CreateLeagueService extends AbstractService {
       league.idCompetition
     );
     await this.leagueRepository.insertOne(newLeague, 'League');
-  }
-
-  async validateUsers(userIds: number[]): Promise<void> {
-    if (userIds.length === 0)
-      throw new NotAcceptableException('A league require at least one user!');
-
-    for await (const idUser of userIds) {
-      const userRes = await this.userService.getUserById(idUser);
-      if (!userRes)
-        throw new NotAcceptableException(`User '${idUser}' not found!`);
-    }
   }
 }

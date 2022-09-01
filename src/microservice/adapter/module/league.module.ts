@@ -7,6 +7,7 @@ import { CreateLeagueService } from '../../domain/service/leagues/create-league.
 import { GetRulesService } from '../../domain/service/rules/get-rules.service';
 import { UsersModule } from './users.module';
 import { CompetitionsModule } from './competitions.module';
+import { UpdateLeagueService } from '../../domain/service/leagues/update-league.service';
 
 @Module({
   imports: [
@@ -15,7 +16,12 @@ import { CompetitionsModule } from './competitions.module';
     UsersModule
   ],
   controllers: [LeaguesController],
-  providers: [LeaguesMongoose, CreateLeagueService, GetRulesService],
+  providers: [
+    LeaguesMongoose,
+    CreateLeagueService,
+    GetRulesService,
+    UpdateLeagueService
+  ],
   exports: [LeaguesMongoose, CreateLeagueService]
 })
 export class LeaguesModule {}

@@ -26,4 +26,33 @@ export class LeaguesMongoose extends MongooseRepository<
 
     return last.id;
   }
+
+  async getById(id: number): Promise<League> {
+    const result = await this.model.findOne({ id });
+    return result;
+  }
+
+  async updateAddUser(id: number, userIds: number[]): Promise<League> {
+    const result = await this.model.findOneAndUpdate(
+      { id },
+      {
+        $push: {
+          userIds: {
+            $each: userIds
+          }
+        }
+      }
+    );
+    return result;
+  }
+
+  async updateRemoveUser(id: number, userIds: number[]): Promise<League> {
+    const result = await this.model.findOneAndUpdate(
+      { id },
+      {
+        $pull: { userIds: { $in: userIds } }
+      }
+    );
+    return result;
+  }
 }
