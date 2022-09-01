@@ -98,13 +98,43 @@ export class BetsMongoose extends RoundsMongoose {
       false
     );
 
+    return this.filterBetsMatch(res);
+  }
+
+  async getBetsByMatchAndLeague(
+    idRound: number,
+    idTeamHome: number,
+    idTeamOutside: number,
+    userIds: number[]
+  ): Promise<any[]> {
+    const res = await this.find(
+      {
+        id: idRound,
+        matches: {
+          $elemMatch: {
+            idTeamHome,
+            idTeamOutside
+          }
+        }
+      },
+      { 'matches.$': 1 },
+      {},
+      false
+    );
+
+    return this.filterBetsMatch(res, userIds);
+  }
+
+  filterBetsMatch(res: Round[], userIds: number[] = []) {
     return res.map((round: Round) => {
       return round.matches
         .filter((matchFilter) => {
           return matchFilter.bets.length > 0;
         })
         .map((match: Match) => {
-          return match.bets;
+          return userIds.length > 0
+            ? match.bets.filter((bet) => userIds.indexOf(bet.idUser) !== -1)
+            : match.bets;
         });
     })[0][0];
   }

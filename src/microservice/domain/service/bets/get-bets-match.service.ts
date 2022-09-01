@@ -23,4 +23,14 @@ export class GetBetsMatchService extends AbstractService {
 
     return this.joinService.joinBets(matches);
   }
+
+  async getBetsByMatchAndLeague(betDTO: GetBetsDTO): Promise<Bet[]> {
+    const matches = await this.betsRepository.getBetsByMatch(
+      betDTO.idRound,
+      betDTO.idTeamHome,
+      betDTO.idTeamOutside
+    );
+
+    return this.joinService.joinBets(matches);
+  }
 }

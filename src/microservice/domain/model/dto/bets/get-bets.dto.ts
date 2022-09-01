@@ -6,4 +6,5 @@ export class GetBetsDTO extends DTO {
   idRound: number;
   idTeamHome: number;
   idTeamOutside: number;
+  idLeague?: number;
 }
