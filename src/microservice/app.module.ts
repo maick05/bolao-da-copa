@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import configuration from '../config/configuration';
 import { BetsModule } from './adapter/module/bets.module';
+import { LeaguesModule } from './adapter/module/league.module';
 import { TeamsModule } from './adapter/module/teams.module';
 
 @Module({
@@ -21,7 +22,8 @@ import { TeamsModule } from './adapter/module/teams.module';
     }),
     HttpModule,
     TeamsModule,
-    BetsModule
+    BetsModule,
+    LeaguesModule
   ],
   controllers: [],
   providers: []
