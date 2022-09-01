@@ -22,13 +22,18 @@ export class LeaguesMongoose extends MongooseRepository<
       .sort({ id: -1 })
       .limit(1);
 
-    if (!last) return 1;
+    if (!last) return 0;
 
     return last.id;
   }
 
   async getById(id: number): Promise<League> {
     const result = await this.model.findOne({ id });
+    return result;
+  }
+
+  async getByUser(id: number): Promise<League[]> {
+    const result = await this.model.find({ idUserAdm: id });
     return result;
   }
 

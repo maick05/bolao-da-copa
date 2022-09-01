@@ -8,6 +8,8 @@ import { GetRulesService } from '../../domain/service/rules/get-rules.service';
 import { UsersModule } from './users.module';
 import { CompetitionsModule } from './competitions.module';
 import { UpdateLeagueService } from '../../domain/service/leagues/update-league.service';
+import { DeleteLeagueService } from '../../domain/service/leagues/delete-league.service';
+import { GetLeagueService } from '../../domain/service/leagues/get-league.service';
 
 @Module({
   imports: [
@@ -20,8 +22,10 @@ import { UpdateLeagueService } from '../../domain/service/leagues/update-league.
     LeaguesMongoose,
     CreateLeagueService,
     GetRulesService,
-    UpdateLeagueService
+    UpdateLeagueService,
+    DeleteLeagueService,
+    GetLeagueService
   ],
-  exports: [LeaguesMongoose, CreateLeagueService]
+  exports: [LeaguesMongoose, CreateLeagueService, GetLeagueService]
 })
 export class LeaguesModule {}

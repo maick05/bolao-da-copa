@@ -32,7 +32,7 @@ export class UsersMongoose extends MongooseRepository<User, UserDocument> {
       .sort({ id: -1 })
       .limit(1);
 
-    if (!last) return 1;
+    if (!last) return 0;
 
     return last.id;
   }

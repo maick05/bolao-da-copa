@@ -20,7 +20,7 @@ export class CreateLeagueService extends LeagueService {
     await this.validateUsers(league.userIds);
 
     const newLeague = new League();
-    newLeague.id = await this.leagueRepository.getLastId();
+    newLeague.id = (await this.leagueRepository.getLastId()) + 1;
     newLeague.name = league.name;
     newLeague.idCompetition = league.idCompetition;
     newLeague.edition = league.edition;

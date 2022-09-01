@@ -1,7 +1,10 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { UpdateLeagueDTO } from 'src/microservice/domain/model/dto/leagues/update-league.dto';
-import { BetRules } from 'src/microservice/domain/schemas/competitions.schema';
-import { UpdateLeagueService } from 'src/microservice/domain/service/leagues/update-league.service';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { UpdateLeagueDTO } from '../../domain/model/dto/leagues/update-league.dto';
+import { BetRules } from '../../domain/schemas/competitions.schema';
+import { League } from '../../domain/schemas/leagues.schema';
+import { DeleteLeagueService } from '../../domain/service/leagues/delete-league.service';
+import { GetLeagueService } from '../../domain/service/leagues/get-league.service';
+import { UpdateLeagueService } from '../../domain/service/leagues/update-league.service';
 import { CreateLeagueDTO } from '../../domain/model/dto/leagues/create-league.dto';
 import { CreateLeagueService } from '../../domain/service/leagues/create-league.service';
 
@@ -9,7 +12,9 @@ import { CreateLeagueService } from '../../domain/service/leagues/create-league.
 export class LeaguesController {
   constructor(
     private readonly createLeagueService: CreateLeagueService,
-    private readonly updateLeagueService: UpdateLeagueService
+    private readonly updateLeagueService: UpdateLeagueService,
+    private readonly deleteLeagueService: DeleteLeagueService,
+    private readonly getLeagueService: GetLeagueService
   ) {}
 
   @Post('/create')
@@ -47,5 +52,20 @@ export class LeaguesController {
     @Body() userIds: number[]
   ): Promise<void> {
     return this.updateLeagueService.updateRemoveUserToLeague(id, userIds);
+  }
+
+  @Delete('/delete/:id')
+  deleteLeague(@Param('id') id: number): Promise<void> {
+    return this.deleteLeagueService.deleteLeague(id);
+  }
+
+  @Get('/details/:id')
+  getLeagueById(@Param('id') id: number): Promise<League> {
+    return this.getLeagueService.getLeagueById(id);
+  }
+
+  @Get('/user/:id')
+  getLeaguesByUser(@Param('id') id: number): Promise<League[]> {
+    return this.getLeagueService.getLeaguesByUser(id);
   }
 }
