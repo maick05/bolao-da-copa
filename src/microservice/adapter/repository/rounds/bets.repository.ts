@@ -7,7 +7,6 @@ import {
   Round,
   RoundDocument
 } from '../../../domain/schemas/rounds.schema';
-import { MongooseRepository } from '@devseeder/nestjs-microservices-commons';
 import { RoundsMongoose } from './rounds.repository';
 
 @Injectable()
@@ -110,10 +109,11 @@ export class BetsMongoose extends RoundsMongoose {
     })[0][0];
   }
 
-  async getBetsByCompetition(idCompetition: number) {
+  async getBetsByCompetition(idCompetition: number, edition: number) {
     const res = await this.find(
       {
         idCompetition,
+        edition,
         'matches.scoreHome': { $gt: -1 },
         'matches.scoreOutside': { $gt: -1 }
       },
@@ -122,11 +122,39 @@ export class BetsMongoose extends RoundsMongoose {
       false
     );
 
+    return this.filterRoundBets(res);
+  }
+
+  async getBetsByCompetitionAndRound(
+    idCompetition: number,
+    edition: number,
+    idRound: number
+  ) {
+    const res = await this.find(
+      {
+        id: idRound,
+        idCompetition,
+        edition
+      },
+      { matches: 1 },
+      {},
+      false
+    );
+
+    return this.filterRoundBets(res);
+  }
+
+  filterRoundBets(res: Round[]) {
     const arr = [];
+
     res.forEach((round: Round) => {
       round.matches
         .filter((matchFilter) => {
-          return matchFilter.bets.length > 0;
+          return (
+            matchFilter.bets.length > 0 &&
+            matchFilter.scoreHome > -1 &&
+            matchFilter.scoreOutside > -1
+          );
         })
         .forEach((match: Match) => {
           arr.push(...match.bets);

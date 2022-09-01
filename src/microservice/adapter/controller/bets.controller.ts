@@ -3,7 +3,10 @@ import { PushBetDTO } from '../../domain/model/dto/bets/push-bet.dto';
 import { PushBetService } from '../../domain/service/bets/push-bet.service';
 import { SetMatchResultDTO } from '../../domain/model/dto/set-match-result.dto';
 import { GetBetsClassificationService } from '../../domain/service/bets/get-bets-classification.service';
-import { GetBetsClassificationDTO } from '../../domain/model/dto/bets/get-bets-classification.dto';
+import {
+  GetBetsClassificationDTO,
+  GetBetsClassificationRoundDTO
+} from '../../domain/model/dto/bets/get-bets-classification.dto';
 import { GetBetsDTO } from '../../domain/model/dto/bets/get-bets.dto';
 import { GetBetsMatchService as GetBetsByMatchService } from '../../domain/service/bets/get-bets-match.service';
 
@@ -30,6 +33,13 @@ export class BetsController {
     @Param() bet: GetBetsClassificationDTO
   ): Promise<any[]> {
     return this.getBetsClassificationService.getClassificationBets(bet);
+  }
+
+  @Get('/classification/:idCompetition/:edition/:idRound')
+  getBetsClassificationRound(
+    @Param() bet: GetBetsClassificationRoundDTO
+  ): Promise<any[]> {
+    return this.getBetsClassificationService.getClassificationRoundBets(bet);
   }
 
   @Post('/match/:idCompetition/:edition')

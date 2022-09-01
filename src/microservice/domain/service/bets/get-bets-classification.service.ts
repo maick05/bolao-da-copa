@@ -2,7 +2,10 @@ import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BetsMongoose } from '../../../adapter/repository/rounds/bets.repository';
 import { CompetitionsMongoose } from '../../../adapter/repository/competitions.repository';
-import { GetBetsClassificationDTO } from '../../model/dto/bets/get-bets-classification.dto';
+import {
+  GetBetsClassificationDTO,
+  GetBetsClassificationRoundDTO
+} from '../../model/dto/bets/get-bets-classification.dto';
 import { Bet } from '../../schemas/rounds.schema';
 import { UsersService } from '../users/users.service';
 import { CalculateBetsScoreService } from './calculate-bets-score.service';
@@ -19,11 +22,26 @@ export class GetBetsClassificationService extends AbstractService {
   }
 
   async getClassificationBets(bet: GetBetsClassificationDTO) {
-    const arrSum = {};
-
     const bets = await this.betsRepository.getBetsByCompetition(
-      bet.idCompetition
+      bet.idCompetition,
+      bet.edition
     );
+
+    return this.generateClassificationBets(bets);
+  }
+
+  async getClassificationRoundBets(bet: GetBetsClassificationRoundDTO) {
+    const bets = await this.betsRepository.getBetsByCompetitionAndRound(
+      bet.idCompetition,
+      bet.edition,
+      bet.idRound
+    );
+
+    return this.generateClassificationBets(bets);
+  }
+
+  private async generateClassificationBets(bets: Bet[]): Promise<Array<any>> {
+    const arrSum = {};
 
     bets.forEach((bet: Bet) => {
       if (typeof arrSum[bet.idUser] == 'undefined') arrSum[bet.idUser] = 0;
