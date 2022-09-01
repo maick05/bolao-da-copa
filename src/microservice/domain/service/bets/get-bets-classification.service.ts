@@ -23,7 +23,15 @@ export class GetBetsClassificationService extends AbstractService {
     super();
   }
 
-  async getClassificationBets(idLeague: number) {
+  async getLeague(idLeague: number) {
+    const league = await this.leaguesRepository.getById(idLeague);
+
+    if (!league) throw new NotFoundException('League Not Found!');
+
+    return league;
+  }
+
+  async getClassificationBetsByLeague(idLeague: number) {
     const { idCompetition, edition, userIds } = await this.getLeague(idLeague);
 
     const bets = await this.betsRepository.getBetsByCompetition(
@@ -34,7 +42,7 @@ export class GetBetsClassificationService extends AbstractService {
     return this.generateClassificationBets(bets, userIds);
   }
 
-  async getClassificationRoundBets(idLeague: number, idRound: number) {
+  async getClassificationRoundBetsByLeague(idLeague: number, idRound: number) {
     const { idCompetition, edition, userIds } = await this.getLeague(idLeague);
 
     const bets = await this.betsRepository.getBetsByCompetitionAndRound(
@@ -46,22 +54,35 @@ export class GetBetsClassificationService extends AbstractService {
     return this.generateClassificationBets(bets, userIds);
   }
 
-  async getLeague(idLeague: number) {
-    const league = await this.leaguesRepository.getById(idLeague);
+  async getClassificationBets(getDTO: GetBetsClassificationDTO) {
+    const bets = await this.betsRepository.getBetsByCompetition(
+      getDTO.idCompetition,
+      getDTO.edition
+    );
 
-    if (!league) throw new NotFoundException('League Not Found!');
+    return this.generateClassificationBets(bets);
+  }
 
-    return league;
+  async getClassificationRoundBets(getDTO: GetBetsClassificationRoundDTO) {
+    const bets = await this.betsRepository.getBetsByCompetitionAndRound(
+      getDTO.idCompetition,
+      getDTO.edition,
+      getDTO.idRound
+    );
+
+    return this.generateClassificationBets(bets);
   }
 
   private async generateClassificationBets(
     bets: Bet[],
-    userIds: number[]
+    userIds: number[] = []
   ): Promise<Array<any>> {
     const arrSum = {};
 
     bets
-      .filter((bet) => userIds.indexOf(bet.idUser) !== -1)
+      .filter((bet) =>
+        userIds.length > 0 ? userIds.indexOf(bet.idUser) !== -1 : true
+      )
       .forEach((bet: Bet) => {
         if (typeof arrSum[bet.idUser] == 'undefined') arrSum[bet.idUser] = 0;
         arrSum[bet.idUser] += bet.scoreBet;
