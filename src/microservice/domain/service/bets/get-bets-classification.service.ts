@@ -9,11 +9,13 @@ import {
 import { Bet } from '../../schemas/rounds.schema';
 import { UsersService } from '../users/users.service';
 import { CalculateBetsScoreService } from './calculate-bets-score.service';
+import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 
 @Injectable()
 export class GetBetsClassificationService extends AbstractService {
   constructor(
     protected readonly betsRepository: BetsMongoose,
+    protected readonly leaguesRepository: LeaguesMongoose,
     protected readonly competitionsRepository: CompetitionsMongoose,
     protected readonly calculateBetsService: CalculateBetsScoreService,
     protected readonly usersService: UsersService
@@ -21,20 +23,32 @@ export class GetBetsClassificationService extends AbstractService {
     super();
   }
 
-  async getClassificationBets(bet: GetBetsClassificationDTO) {
+  async getClassificationBets(idLeague: number) {
+    const { idCompetition, edition } = await this.getLeague(idLeague);
+
     const bets = await this.betsRepository.getBetsByCompetition(
-      bet.idCompetition,
-      bet.edition
+      idCompetition,
+      edition
     );
 
     return this.generateClassificationBets(bets);
   }
 
-  async getClassificationRoundBets(bet: GetBetsClassificationRoundDTO) {
+  async getLeague(idLeague: number) {
+    const league = await this.leaguesRepository.getById(idLeague);
+
+    if (!league) throw new NotFoundException('League Not Found!');
+
+    return league;
+  }
+
+  async getClassificationRoundBets(idLeague: number, idRound: number) {
+    const { idCompetition, edition } = await this.getLeague(idLeague);
+
     const bets = await this.betsRepository.getBetsByCompetitionAndRound(
-      bet.idCompetition,
-      bet.edition,
-      bet.idRound
+      idCompetition,
+      edition,
+      idRound
     );
 
     return this.generateClassificationBets(bets);

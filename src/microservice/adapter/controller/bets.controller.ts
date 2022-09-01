@@ -28,18 +28,20 @@ export class BetsController {
     return this.betService.setMatchResult(bet);
   }
 
-  @Get('/classification/:idCompetition/:edition')
-  getBetsClassification(
-    @Param() bet: GetBetsClassificationDTO
-  ): Promise<any[]> {
-    return this.getBetsClassificationService.getClassificationBets(bet);
+  @Get('/classification/:idLeague')
+  getBetsClassification(@Param('idLeague') idLeague: number): Promise<any[]> {
+    return this.getBetsClassificationService.getClassificationBets(idLeague);
   }
 
-  @Get('/classification/:idCompetition/:edition/:idRound')
+  @Get('/classification/:idLeague/:idRound')
   getBetsClassificationRound(
-    @Param() bet: GetBetsClassificationRoundDTO
+    @Param('idLeague') idLeague: number,
+    @Param('idRound') idRound: number
   ): Promise<any[]> {
-    return this.getBetsClassificationService.getClassificationRoundBets(bet);
+    return this.getBetsClassificationService.getClassificationRoundBets(
+      idLeague,
+      idRound
+    );
   }
 
   @Post('/match/:idCompetition/:edition')
