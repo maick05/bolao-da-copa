@@ -6,10 +6,14 @@ import { Score } from '../../interface/score.interface';
 import { SetMatchResultDTO } from '../../model/dto/set-match-result.dto';
 import { BetRules } from '../../schemas/competitions.schema';
 import { Bet } from '../../schemas/rounds.schema';
+import { GetLeagueService } from '../leagues/get-league.service';
 
 @Injectable()
 export class CalculateBetsScoreService extends AbstractService {
-  constructor(protected readonly competitionRepository: CompetitionsMongoose) {
+  constructor(
+    protected readonly competitionRepository: CompetitionsMongoose,
+    protected readonly getLeagueService: GetLeagueService
+  ) {
     super();
   }
 
@@ -17,7 +21,7 @@ export class CalculateBetsScoreService extends AbstractService {
     matchResultDTO: SetMatchResultDTO,
     bets: Bet[]
   ) {
-    const rules = await this.competitionRepository.getRulesCompetition(
+    const { rules } = await this.getLeagueService.getLeagueByIdCompetition(
       matchResultDTO.idCompetition
     );
 
