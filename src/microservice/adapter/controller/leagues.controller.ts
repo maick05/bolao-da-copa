@@ -66,6 +66,6 @@ export class LeaguesController {
 
   @Get('/user/:id')
   getLeaguesByUser(@Param('id') id: number): Promise<League[]> {
-    return this.getLeagueService.getLeaguesByUser(id);
+    return this.getLeagueService.getLeaguesByUserAdm(id);
   }
 }

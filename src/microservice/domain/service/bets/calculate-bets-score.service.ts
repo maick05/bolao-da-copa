@@ -21,12 +21,9 @@ export class CalculateBetsScoreService extends AbstractService {
     matchResultDTO: SetMatchResultDTO,
     bets: Bet[]
   ) {
-    const { rules } = await this.getLeagueService.getLeagueByIdCompetition(
-      matchResultDTO.idCompetition
-    );
-
     const arrScore = {};
     bets.forEach(async (bet: Bet) => {
+      const { rules } = await this.getLeagueService.getByUserId(bet.idUser);
       arrScore[bet.idUser] = await this.calculateScore(
         bet,
         matchResultDTO,
