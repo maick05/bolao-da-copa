@@ -1,9 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { User } from 'src/microservice/domain/schemas/users.schema';
-import { GetUserService } from 'src/microservice/domain/service/users/get-user.service';
-import { UpdateUserService } from 'src/microservice/domain/service/users/update-user.service';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { MyJwtAuthGuard } from '../../../core/auth/jwt.auth';
+import { EnumScopes } from '../../domain/enum/enum-scopes.enum';
+import { User } from '../../domain/schemas/users.schema';
+import { GetUserService } from '../../domain/service/users/get-user.service';
+import { UpdateUserService } from '../../domain/service/users/update-user.service';
 import { UpdateUserDTO, UserDTO } from '../../domain/model/dto/users/user.dto';
 import { CreateUserService } from '../../domain/service/users/create-user.service';
+import { Scopes } from '@devseeder/nestjs-microservices-core';
 
 @Controller('users')
 export class UsersController {
@@ -13,21 +16,29 @@ export class UsersController {
     private readonly updateUserService: UpdateUserService
   ) {}
 
+  @UseGuards(MyJwtAuthGuard)
+  @Scopes(EnumScopes.ADM)
   @Post('/create')
   createUser(@Body() user: UserDTO): Promise<any> {
     return this.createUserService.createUser(user);
   }
 
+  @UseGuards(MyJwtAuthGuard)
+  @Scopes(EnumScopes.USER)
   @Get('/details/:id')
   getUserById(@Param('id') id: number): Promise<User> {
     return this.getUserService.getUserById(id);
   }
 
+  @UseGuards(MyJwtAuthGuard)
+  @Scopes(EnumScopes.USER)
   @Get('/search/:name')
   getUser(@Param('name') name: string): Promise<User[]> {
     return this.getUserService.searchUserByUsername(name);
   }
 
+  @UseGuards(MyJwtAuthGuard)
+  @Scopes(EnumScopes.USER)
   @Post('/update/:id')
   updateUserName(
     @Param('id') id: number,
@@ -36,6 +47,8 @@ export class UsersController {
     return this.updateUserService.updateUserName(id, user);
   }
 
+  @UseGuards(MyJwtAuthGuard)
+  @Scopes(EnumScopes.USER)
   @Post('/inactivate/:id')
   inactivateUser(@Param('id') id: number): Promise<void> {
     return this.updateUserService.updateInactivateUser(id);

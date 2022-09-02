@@ -9,12 +9,14 @@ import { JoinService } from '../../domain/service/join.service';
 import { BetsModule } from './bets.module';
 import { TeamsModule } from './teams.module';
 import { UsersModule } from './users.module';
+import { AuthJwtModule } from './auth-jwt.module';
 
 @Module({
   imports: [
     forwardRef(() => BetsModule),
     TeamsModule,
     UsersModule,
+    AuthJwtModule,
     MongooseModule.forFeature([{ name: Round.name, schema: RoundsSchema }])
   ],
   controllers: [RoundsController],

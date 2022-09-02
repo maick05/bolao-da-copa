@@ -8,8 +8,9 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from '../../../config/configuration';
 import { HttpModule } from '@nestjs/axios';
 import { UsersController } from '../controller/users.controller';
-import { GetUserService } from 'src/microservice/domain/service/users/get-user.service';
-import { UpdateUserService } from 'src/microservice/domain/service/users/update-user.service';
+import { GetUserService } from '../../domain/service/users/get-user.service';
+import { UpdateUserService } from '../../domain/service/users/update-user.service';
+import { AuthJwtModule } from './auth-jwt.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UpdateUserService } from 'src/microservice/domain/service/users/update-
       isGlobal: true,
       load: [configuration]
     }),
+    AuthJwtModule,
     HttpModule
   ],
   controllers: [UsersController],

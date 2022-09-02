@@ -10,12 +10,14 @@ import { CompetitionsModule } from './competitions.module';
 import { UpdateLeagueService } from '../../domain/service/leagues/update-league.service';
 import { DeleteLeagueService } from '../../domain/service/leagues/delete-league.service';
 import { GetLeagueService } from '../../domain/service/leagues/get-league.service';
+import { AuthJwtModule } from './auth-jwt.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: League.name, schema: LeaguesSchema }]),
     CompetitionsModule,
-    UsersModule
+    UsersModule,
+    AuthJwtModule
   ],
   controllers: [LeaguesController],
   providers: [

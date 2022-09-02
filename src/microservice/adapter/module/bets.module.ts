@@ -10,9 +10,16 @@ import { BetsMongoose } from '../repository/rounds/bets.repository';
 import { MatchesMongoose } from '../repository/rounds/matches.repository';
 import { GetBetsMatchService } from '../../domain/service/bets/get-bets-match.service';
 import { LeaguesModule } from './league.module';
+import { AuthJwtModule } from './auth-jwt.module';
 
 @Module({
-  imports: [RoundsModule, CompetitionsModule, UsersModule, LeaguesModule],
+  imports: [
+    RoundsModule,
+    CompetitionsModule,
+    UsersModule,
+    LeaguesModule,
+    AuthJwtModule
+  ],
   controllers: [BetsController],
   providers: [
     PushBetService,

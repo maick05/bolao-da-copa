@@ -7,12 +7,14 @@ import {
 } from '../../domain/schemas/competitions.schema';
 import { CompetitionsController } from '../controller/competitions.controller';
 import { GetRulesService } from '../../domain/service/rules/get-rules.service';
+import { AuthJwtModule } from './auth-jwt.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Competition.name, schema: CompetitionsSchema }
-    ])
+    ]),
+    AuthJwtModule
   ],
   controllers: [CompetitionsController],
   providers: [CompetitionsMongoose, GetRulesService],
