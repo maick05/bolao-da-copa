@@ -23,7 +23,7 @@ export class GetUserService extends UsersService {
         ],
         active: true
       },
-      { username: 1, name: 1 },
+      { id: 1, username: 1, name: 1 },
       {},
       false
     );
