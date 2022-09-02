@@ -1,7 +1,7 @@
 import { NotFoundException } from '@devseeder/microservices-exceptions';
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable, NotAcceptableException } from '@nestjs/common';
-import { LeaguesMongoose } from 'src/microservice/adapter/repository/leagues.repository';
+import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { CreateUserService } from '../users/create-user.service';
 
 @Injectable()

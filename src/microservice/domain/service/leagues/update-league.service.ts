@@ -1,5 +1,5 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
-import { LeaguesMongoose } from 'src/microservice/adapter/repository/leagues.repository';
+import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { UpdateLeagueDTO } from '../../model/dto/leagues/update-league.dto';
 import { BetRules } from '../../schemas/competitions.schema';
 import { CreateUserService } from '../users/create-user.service';

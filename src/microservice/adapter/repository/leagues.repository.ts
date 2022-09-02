@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongooseRepository } from '@devseeder/nestjs-microservices-commons';
 import { League, LeagueDocument } from '../../domain/schemas/leagues.schema';
-import { BetRules } from 'src/microservice/domain/schemas/competitions.schema';
+import { BetRules } from '../../domain/schemas/competitions.schema';
 
 @Injectable()
 export class LeaguesMongoose extends MongooseRepository<
