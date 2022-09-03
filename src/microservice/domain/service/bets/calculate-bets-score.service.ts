@@ -5,7 +5,7 @@ import { RoundsMongoose } from '../../../adapter/repository/rounds/rounds.reposi
 import { Score } from '../../interface/score.interface';
 import { SetMatchResultDTO } from '../../model/dto/set-match-result.dto';
 import { BetRules } from '../../schemas/competitions.schema';
-import { Bet } from '../../schemas/rounds.schema';
+import { Bet, ScoreBet } from '../../schemas/rounds.schema';
 import { GetLeagueService } from '../leagues/get-league.service';
 
 @Injectable()
@@ -20,26 +20,37 @@ export class CalculateBetsScoreService extends AbstractService {
   async calculateScoreByMatchResult(
     matchResultDTO: SetMatchResultDTO,
     bets: Bet[]
-  ) {
+  ): Promise<any> {
     const arrScore = {};
-    bets.forEach(async (bet: Bet) => {
-      const { rules } = await this.getLeagueService.getByUserId(bet.idUser);
-      arrScore[bet.idUser] = await this.calculateScore(
-        bet,
-        matchResultDTO,
-        rules
-      );
-    });
+    for await (const bet of bets) {
+      arrScore[bet.idUser] = [];
+      const leagues = await this.getLeagueService.getByUserId(bet.idUser);
+      for await (const league of leagues) {
+        const score = await this.calculateScore(
+          bet,
+          matchResultDTO,
+          league.rules
+        );
+        score.idLeague = league.id;
+        arrScore[bet.idUser].push(score);
+      }
+    }
 
     return arrScore;
   }
 
-  calculateScore(bet: Bet, score: Score, rules: BetRules) {
+  calculateScore(bet: Bet, score: Score, rules: BetRules): ScoreBet {
+    const scoreBet = new ScoreBet();
+
     if (
       bet.scoreHome == score.scoreHome &&
       bet.scoreOutside == score.scoreOutside
     ) {
-      return rules.exactlyMatch;
+      scoreBet.exactlyMatch = true;
+      scoreBet.oneScore = true;
+      scoreBet.winner = true;
+      scoreBet.scoreBet = rules.exactlyMatch;
+      return scoreBet;
     }
 
     let points = 0;
@@ -49,13 +60,21 @@ export class CalculateBetsScoreService extends AbstractService {
       bet.scoreOutside == score.scoreOutside
     ) {
       points += rules.oneScore;
+      scoreBet.oneScore = true;
     }
 
-    if (this.checkWinnerAssert(bet, score)) points += rules.winner;
+    if (this.checkWinnerAssert(bet, score)) {
+      points += rules.winner;
+      scoreBet.winner = true;
+    }
 
-    if (this.checkDrawAssert(bet, score)) points += rules.winner;
+    if (this.checkDrawAssert(bet, score)) {
+      points += rules.winner;
+      scoreBet.winner = true;
+    }
 
-    return points;
+    scoreBet.scoreBet = points;
+    return scoreBet;
   }
 
   checkWinnerAssert(bet: Bet, score: Score): boolean {

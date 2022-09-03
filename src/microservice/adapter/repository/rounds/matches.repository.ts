@@ -5,7 +5,8 @@ import {
   Bet,
   Match,
   Round,
-  RoundDocument
+  RoundDocument,
+  ScoreBet
 } from '../../../domain/schemas/rounds.schema';
 import { RoundsMongoose } from './rounds.repository';
 
@@ -49,7 +50,7 @@ export class MatchesMongoose extends RoundsMongoose {
     idTeamOutside: number,
     idUser: number,
     index: number,
-    scoreBet: number
+    scoreBet: ScoreBet[]
   ) {
     const updateAttr = `matches.$.bets.${index}.scoreBet`;
     const objSet = {};

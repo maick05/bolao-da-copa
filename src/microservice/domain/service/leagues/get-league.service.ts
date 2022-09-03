@@ -18,7 +18,7 @@ export class GetLeagueService extends LeagueService {
     return this.leagueRepository.getById(id);
   }
 
-  async getByUserId(id: number): Promise<League> {
+  async getByUserId(id: number): Promise<League[]> {
     return this.leagueRepository.getByUserId(id);
   }
 

@@ -33,8 +33,8 @@ export class LeaguesMongoose extends MongooseRepository<
     return result;
   }
 
-  async getByUserId(idUser: number): Promise<League> {
-    const result = await this.model.findOne({
+  async getByUserId(idUser: number): Promise<League[]> {
+    const result = await this.model.find({
       userIds: {
         $in: [idUser]
       }

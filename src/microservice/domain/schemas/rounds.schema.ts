@@ -76,8 +76,36 @@ export class Bet {
   @Prop({ required: true, type: Date })
   dateTime?: Date;
 
-  @Prop({ required: false })
-  scoreBet?: number;
+  @Prop({ required: false, type: Array, default: [] })
+  scoreBet?: ScoreBet[];
+}
+
+export class ScoreBet {
+  @Prop({ required: true })
+  idLeague: number;
+
+  @Prop({ required: false, type: Boolean, default: false })
+  exactlyMatch?: boolean;
+
+  @Prop({ required: false, type: Boolean, default: false })
+  oneScore: boolean;
+
+  @Prop({ required: false, type: Boolean, default: false })
+  winner: boolean;
+
+  @Prop({ required: false, type: Boolean, default: false })
+  penaltWinner: boolean;
+
+  @Prop({ required: true })
+  scoreBet: number;
+
+  constructor() {
+    this.exactlyMatch = false;
+    this.oneScore = false;
+    this.winner = false;
+    this.penaltWinner = false;
+    this.scoreBet = 0;
+  }
 }
 
 const schema = SchemaFactory.createForClass(Round);

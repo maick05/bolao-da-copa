@@ -38,7 +38,7 @@ export class PushBetService extends AbstractService {
     bet.idUser = betDTO.idUser;
     bet.scoreHome = betDTO.scoreHome;
     bet.scoreOutside = betDTO.scoreOutside;
-    bet.scoreBet = null;
+    bet.scoreBet = [];
     return this.betsRepository.pushBets(
       betDTO.idCompetition,
       betDTO.edition,
