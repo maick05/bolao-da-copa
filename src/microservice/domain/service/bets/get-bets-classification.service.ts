@@ -39,7 +39,7 @@ export class GetBetsClassificationService extends AbstractService {
       edition
     );
 
-    return this.generateClassificationBets(bets, userIds);
+    return this.generateClassificationBets(bets, userIds, idLeague);
   }
 
   async getClassificationRoundBetsByLeague(idLeague: number, idRound: number) {
@@ -51,7 +51,7 @@ export class GetBetsClassificationService extends AbstractService {
       idRound
     );
 
-    return this.generateClassificationBets(bets, userIds);
+    return this.generateClassificationBets(bets, userIds, idLeague);
   }
 
   async getClassificationBets(getDTO: GetBetsClassificationDTO) {
@@ -75,24 +75,48 @@ export class GetBetsClassificationService extends AbstractService {
 
   private async generateClassificationBets(
     bets: Bet[],
-    userIds: number[] = []
+    userIds: number[] = [],
+    idLeague = 0
   ): Promise<Array<any>> {
     const arrSum = {};
 
     bets
+      .filter((bet) => bet.scoreBet.length > 0)
       .filter((bet) =>
         userIds.length > 0 ? userIds.indexOf(bet.idUser) !== -1 : true
       )
       .forEach((bet: Bet) => {
-        if (typeof arrSum[bet.idUser] == 'undefined') arrSum[bet.idUser] = 0;
-        arrSum[bet.idUser] += bet.scoreBet;
+        if (typeof arrSum[bet.idUser] == 'undefined') {
+          arrSum[bet.idUser] = {
+            points: 0,
+            exactlyMatch: 0,
+            winner: 0,
+            oneScore: 0
+          };
+        }
+
+        if (idLeague > 0) {
+          const betFilter = bet.scoreBet.filter(
+            (betScore) => betScore.idLeague == idLeague
+          )[0];
+          arrSum[bet.idUser].points += betFilter.scoreBet;
+          arrSum[bet.idUser].exactlyMatch += betFilter.exactlyMatch ? 1 : 0;
+          arrSum[bet.idUser].oneScore += betFilter.oneScore ? 1 : 0;
+          arrSum[bet.idUser].winner += betFilter.winner ? 1 : 0;
+        } else {
+          const betFilter = bet.scoreBet[0];
+          arrSum[bet.idUser].points += betFilter.scoreBet;
+          arrSum[bet.idUser].exactlyMatch += betFilter.exactlyMatch ? 1 : 0;
+          arrSum[bet.idUser].oneScore += betFilter.oneScore ? 1 : 0;
+          arrSum[bet.idUser].winner += betFilter.winner ? 1 : 0;
+        }
       });
 
     const arrSumUser = Object.keys(arrSum)
       .map((index) => {
         return {
           user: index,
-          points: arrSum[index]
+          ...arrSum[index]
         };
       })
       .sort();
