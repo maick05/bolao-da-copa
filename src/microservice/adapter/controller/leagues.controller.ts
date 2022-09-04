@@ -18,6 +18,7 @@ import { CreateLeagueService } from '../../domain/service/leagues/create-league.
 import { Scopes } from '@devseeder/nestjs-microservices-core';
 import { EnumScopes } from '../../domain/enum/enum-scopes.enum';
 import { MyJwtAuthGuard } from '../../../core/auth/jwt.auth';
+import { GetUser } from 'src/microservice/domain/decorators/get-user.decorator';
 
 @Controller('leagues')
 export class LeaguesController {
@@ -43,9 +44,10 @@ export class LeaguesController {
   @Post('/update/:id')
   update(
     @Param('id') id: number,
-    @Body() league: UpdateLeagueDTO
+    @Body() league: UpdateLeagueDTO,
+    @GetUser() user
   ): Promise<void> {
-    return this.updateLeagueService.updateNameLeague(id, league);
+    return this.updateLeagueService.updateNameLeague(id, league, user);
   }
 
   @UseGuards(MyJwtAuthGuard)
@@ -53,9 +55,10 @@ export class LeaguesController {
   @Post('/update/users/add/:id')
   updateAddUsers(
     @Param('id') id: number,
-    @Body() userIds: number[]
+    @Body() userIds: number[],
+    @GetUser() user
   ): Promise<void> {
-    return this.updateLeagueService.updateAddUserToLeague(id, userIds);
+    return this.updateLeagueService.updateAddUserToLeague(id, userIds, user);
   }
 
   @UseGuards(MyJwtAuthGuard)
@@ -63,16 +66,17 @@ export class LeaguesController {
   @Post('/update/users/remove/:id')
   updateRemoveUsers(
     @Param('id') id: number,
-    @Body() userIds: number[]
+    @Body() userIds: number[],
+    @GetUser() user
   ): Promise<void> {
-    return this.updateLeagueService.updateRemoveUserToLeague(id, userIds);
+    return this.updateLeagueService.updateRemoveUserToLeague(id, userIds, user);
   }
 
   @UseGuards(MyJwtAuthGuard)
   @Scopes(EnumScopes.USER)
   @Delete('/delete/:id')
-  deleteLeague(@Param('id') id: number): Promise<void> {
-    return this.deleteLeagueService.deleteLeague(id);
+  deleteLeague(@Param('id') id: number, @GetUser() user): Promise<void> {
+    return this.deleteLeagueService.deleteLeague(id, user);
   }
 
   @UseGuards(MyJwtAuthGuard)

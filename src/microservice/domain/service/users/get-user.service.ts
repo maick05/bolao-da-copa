@@ -13,6 +13,10 @@ export class GetUserService extends UsersService {
     return this.usersRepository.getUserById(id);
   }
 
+  async getUserByEmail(email: string): Promise<User> {
+    return this.usersRepository.getUserByEmail(email);
+  }
+
   async searchUserByUsername(name: string): Promise<User[]> {
     const regexName = new RegExp(name, 'i');
     return this.usersRepository.find(

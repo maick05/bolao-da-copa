@@ -30,6 +30,6 @@ import { AuthJwtModule } from './auth-jwt.module';
     GetUserService,
     UpdateUserService
   ],
-  exports: [UsersMongoose, CreateUserService, ClientAuthService]
+  exports: [UsersMongoose, CreateUserService, ClientAuthService, GetUserService]
 })
 export class UsersModule {}

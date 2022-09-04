@@ -17,9 +17,9 @@ export class RecalculationService extends LeagueService {
     protected readonly getLeagueService: GetLeagueService,
     protected readonly getRoundsService: GetRoundsByCompetitionService,
     protected readonly pushBetService: PushBetService,
-    protected readonly userService: CreateUserService
+    protected readonly createUserService: CreateUserService
   ) {
-    super(leagueRepository, userService);
+    super(leagueRepository, createUserService);
   }
 
   async recalculateBetByRule(idLeague: number) {
@@ -31,13 +31,12 @@ export class RecalculationService extends LeagueService {
     betsDTO.edition = league.edition;
 
     const rounds = await this.getRoundsService.getRoundsByCompetition(betsDTO);
-    console.log(rounds);
+
     rounds.forEach(async (round: Round) => {
       for await (const match of round.matches) {
         betsDTO.idRound = round.id;
         betsDTO.idTeamHome = match.idTeamHome;
         betsDTO.idTeamOutside = match.idTeamOutside;
-        console.log(betsDTO);
         await this.recalculateBetByMatch(betsDTO, match);
       }
     });
@@ -52,8 +51,13 @@ export class RecalculationService extends LeagueService {
     await this.pushBetService.setMatchResult(dto);
   }
 
-  async recalculateRulesLeague(id: number, rules: BetRules): Promise<any> {
+  async recalculateRulesLeague(
+    id: number,
+    rules: BetRules,
+    username: string
+  ): Promise<any> {
     await this.validateLeague(id);
+    await this.getLeagueService.validateAdmLeague(username, id);
     await this.leagueRepository.updateRules(id, rules);
     await this.recalculateBetByRule(id);
   }

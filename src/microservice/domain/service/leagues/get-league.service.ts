@@ -1,16 +1,22 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotAcceptableException
+} from '@nestjs/common';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { League } from '../../schemas/leagues.schema';
 import { CreateUserService } from '../users/create-user.service';
+import { GetUserService } from '../users/get-user.service';
 import { LeagueService } from './league.service';
 
 @Injectable()
 export class GetLeagueService extends LeagueService {
   constructor(
     protected readonly leagueRepository: LeaguesMongoose,
-    protected readonly userService: CreateUserService
+    protected readonly createUserService: CreateUserService,
+    protected readonly getUserService: GetUserService
   ) {
-    super(leagueRepository, userService);
+    super(leagueRepository, createUserService);
   }
 
   async getLeagueById(id: number): Promise<League> {
@@ -25,5 +31,15 @@ export class GetLeagueService extends LeagueService {
   async getLeaguesByUserAdm(idUser: number): Promise<League[]> {
     await this.validateUsers([idUser]);
     return this.leagueRepository.getByUserAdm(idUser);
+  }
+
+  async validateAdmLeague(username: string, idLeague: number) {
+    const user = await this.getUserService.getUserByEmail(username);
+    const league = await this.leagueRepository.getById(idLeague);
+
+    if (user.id !== league.idUserAdm)
+      throw new ForbiddenException(
+        'This user is not allowed to perform this action in this league, only the ADM can do it!'
+      );
   }
 }

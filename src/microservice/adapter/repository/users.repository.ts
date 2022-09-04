@@ -18,6 +18,14 @@ export class UsersMongoose extends MongooseRepository<User, UserDocument> {
     return result;
   }
 
+  async getUserByEmail(username: string): Promise<User> {
+    const result = await this.model.findOne({
+      username,
+      projectKey: { $in: ['BOLAO_DA_COPA', 'GLOBAL'] }
+    });
+    return result;
+  }
+
   async getInfoTeamById(id: number, field = 'name'): Promise<any> {
     const select = {};
     select[field] = 1;

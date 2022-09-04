@@ -1,21 +1,27 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { UpdateLeagueDTO } from '../../model/dto/leagues/update-league.dto';
-import { BetRules } from '../../schemas/competitions.schema';
 import { CreateUserService } from '../users/create-user.service';
+import { GetLeagueService } from './get-league.service';
 import { LeagueService } from './league.service';
 
 @Injectable()
 export class UpdateLeagueService extends LeagueService {
   constructor(
     protected readonly leagueRepository: LeaguesMongoose,
-    protected readonly userService: CreateUserService
+    protected readonly createUserService: CreateUserService,
+    protected readonly getLeagueService: GetLeagueService
   ) {
-    super(leagueRepository, userService);
+    super(leagueRepository, createUserService);
   }
 
-  async updateNameLeague(id: number, league: UpdateLeagueDTO): Promise<any> {
+  async updateNameLeague(
+    id: number,
+    league: UpdateLeagueDTO,
+    username: string
+  ): Promise<any> {
     await this.validateLeague(id);
+    await this.getLeagueService.validateAdmLeague(username, id);
     await this.leagueRepository.updateOne(
       {
         id
@@ -24,8 +30,14 @@ export class UpdateLeagueService extends LeagueService {
     );
   }
 
-  async updateAddUserToLeague(id: number, userIds: number[]): Promise<any> {
+  async updateAddUserToLeague(
+    id: number,
+    userIds: number[],
+    username: string
+  ): Promise<any> {
     await this.validateLeague(id);
+
+    await this.getLeagueService.validateAdmLeague(username, id);
 
     await this.validateUsers(userIds);
 
@@ -41,8 +53,14 @@ export class UpdateLeagueService extends LeagueService {
     await this.leagueRepository.updateAddUser(id, userIds);
   }
 
-  async updateRemoveUserToLeague(id: number, userIds: number[]): Promise<any> {
+  async updateRemoveUserToLeague(
+    id: number,
+    userIds: number[],
+    username: string
+  ): Promise<any> {
     await this.validateLeague(id);
+
+    await this.getLeagueService.validateAdmLeague(username, id);
 
     await this.validateUsers(userIds);
 

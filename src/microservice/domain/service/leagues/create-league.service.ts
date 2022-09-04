@@ -11,9 +11,9 @@ export class CreateLeagueService extends LeagueService {
   constructor(
     protected readonly leagueRepository: LeaguesMongoose,
     private readonly getRulesService: GetRulesService,
-    protected readonly userService: CreateUserService
+    protected readonly createUserService: CreateUserService
   ) {
-    super(leagueRepository, userService);
+    super(leagueRepository, createUserService);
   }
 
   async createLeague(league: CreateLeagueDTO): Promise<any> {

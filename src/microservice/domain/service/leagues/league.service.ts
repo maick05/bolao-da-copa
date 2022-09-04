@@ -8,7 +8,7 @@ import { CreateUserService } from '../users/create-user.service';
 export abstract class LeagueService extends AbstractService {
   constructor(
     protected readonly leagueRepository: LeaguesMongoose,
-    protected readonly userService: CreateUserService
+    protected readonly createUserService: CreateUserService
   ) {
     super();
   }
@@ -18,7 +18,7 @@ export abstract class LeagueService extends AbstractService {
       throw new NotAcceptableException('A league require at least one user!');
 
     for await (const idUser of userIds) {
-      const userRes = await this.userService.getUserById(idUser);
+      const userRes = await this.createUserService.getUserById(idUser);
       if (!userRes)
         throw new NotAcceptableException(`User '${idUser}' not found!`);
     }
