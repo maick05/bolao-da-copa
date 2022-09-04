@@ -7,6 +7,7 @@ import { UpdateUserService } from '../../domain/service/users/update-user.servic
 import { UpdateUserDTO, UserDTO } from '../../domain/model/dto/users/user.dto';
 import { CreateUserService } from '../../domain/service/users/create-user.service';
 import { Scopes } from '@devseeder/nestjs-microservices-core';
+import { GetUser } from 'src/microservice/domain/decorators/get-user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -42,15 +43,19 @@ export class UsersController {
   @Post('/update/:id')
   updateUserName(
     @Param('id') id: number,
-    @Body() user: UpdateUserDTO
+    @Body() user: UpdateUserDTO,
+    @GetUser() username: string
   ): Promise<void> {
-    return this.updateUserService.updateUserName(id, user);
+    return this.updateUserService.updateUserName(id, user, username);
   }
 
   @UseGuards(MyJwtAuthGuard)
   @Scopes(EnumScopes.USER)
   @Post('/inactivate/:id')
-  inactivateUser(@Param('id') id: number): Promise<void> {
-    return this.updateUserService.updateInactivateUser(id);
+  inactivateUser(
+    @Param('id') id: number,
+    @GetUser() username: string
+  ): Promise<void> {
+    return this.updateUserService.updateInactivateUser(id, username);
   }
 }

@@ -10,8 +10,12 @@ export class UpdateUserService extends UsersService {
     super(usersRepository);
   }
 
-  async updateUserName(id: number, user: UpdateUserDTO): Promise<void> {
-    await this.validateUser(id);
+  async updateUserName(
+    id: number,
+    user: UpdateUserDTO,
+    loggedUsername: string
+  ): Promise<void> {
+    await this.validateUser(id, loggedUsername);
     await this.usersRepository.updateOne(
       {
         id
@@ -20,8 +24,11 @@ export class UpdateUserService extends UsersService {
     );
   }
 
-  async updateInactivateUser(id: number): Promise<void> {
-    await this.validateUser(id);
+  async updateInactivateUser(
+    id: number,
+    loggedUsername: string
+  ): Promise<void> {
+    const validUser = await this.validateUser(id, loggedUsername);
     await this.usersRepository.updateOne(
       {
         id
