@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import configuration from '../config/configuration';
 import { AuthJwtModule } from './adapter/module/auth-jwt.module';
 import { BetsModule } from './adapter/module/bets.module';
+import { ClassificationModule } from './adapter/module/classification.module';
 import { LeaguesModule } from './adapter/module/league.module';
 import { TeamsModule } from './adapter/module/teams.module';
 
@@ -26,7 +27,8 @@ import { TeamsModule } from './adapter/module/teams.module';
     HttpModule,
     TeamsModule,
     BetsModule,
-    LeaguesModule
+    LeaguesModule,
+    ClassificationModule
   ],
   controllers: [],
   providers: []

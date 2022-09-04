@@ -50,13 +50,6 @@ export class LeaguesController {
 
   @UseGuards(MyJwtAuthGuard)
   @Scopes(EnumScopes.USER)
-  @Post('/update/rules/:id')
-  updateRules(@Param('id') id: number, @Body() rules: BetRules): Promise<void> {
-    return this.updateLeagueService.updateRulesLeague(id, rules);
-  }
-
-  @UseGuards(MyJwtAuthGuard)
-  @Scopes(EnumScopes.USER)
   @Post('/update/users/add/:id')
   updateAddUsers(
     @Param('id') id: number,

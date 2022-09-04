@@ -55,6 +55,7 @@ export class JoinService extends AbstractService {
 
   async joinBets(bets: Bet[]): Promise<BetResponse[]> {
     const arrBet = [];
+    if (!bets) return [];
     for await (const bet of bets) {
       const betRes = new BetResponse();
       Object.assign(betRes, bet);

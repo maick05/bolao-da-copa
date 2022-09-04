@@ -24,11 +24,6 @@ export class UpdateLeagueService extends LeagueService {
     );
   }
 
-  async updateRulesLeague(id: number, rules: BetRules): Promise<any> {
-    await this.validateLeague(id);
-    await this.leagueRepository.updateRules(id, rules);
-  }
-
   async updateAddUserToLeague(id: number, userIds: number[]): Promise<any> {
     await this.validateLeague(id);
 

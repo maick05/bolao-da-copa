@@ -28,6 +28,7 @@ import { AuthJwtModule } from './auth-jwt.module';
     BetsMongoose,
     MatchesMongoose,
     GetBetsMatchService
-  ]
+  ],
+  exports: [PushBetService]
 })
 export class BetsModule {}
