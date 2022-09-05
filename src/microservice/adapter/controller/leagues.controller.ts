@@ -18,7 +18,7 @@ import { CreateLeagueService } from '../../domain/service/leagues/create-league.
 import { Scopes } from '@devseeder/nestjs-microservices-core';
 import { EnumScopes } from '../../domain/enum/enum-scopes.enum';
 import { MyJwtAuthGuard } from '../../../core/auth/jwt.auth';
-import { GetUser } from 'src/microservice/domain/decorators/get-user.decorator';
+import { GetUser } from '../../domain/decorators/get-user.decorator';
 
 @Controller('leagues')
 export class LeaguesController {

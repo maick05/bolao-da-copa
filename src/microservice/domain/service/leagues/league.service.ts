@@ -1,6 +1,9 @@
-import { NotFoundException } from '@devseeder/microservices-exceptions';
+import {
+  CustomErrorException,
+  NotFoundException
+} from '@devseeder/microservices-exceptions';
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { CreateUserService } from '../users/create-user.service';
 
@@ -15,12 +18,18 @@ export abstract class LeagueService extends AbstractService {
 
   async validateUsers(userIds: number[]): Promise<void> {
     if (userIds.length === 0)
-      throw new NotAcceptableException('A league require at least one user!');
+      throw new CustomErrorException(
+        'A league require at least one user!',
+        HttpStatus.NOT_ACCEPTABLE
+      );
 
     for await (const idUser of userIds) {
       const userRes = await this.createUserService.getUserById(idUser);
       if (!userRes)
-        throw new NotAcceptableException(`User '${idUser}' not found!`);
+        throw new CustomErrorException(
+          `User '${idUser}' not found!`,
+          HttpStatus.NOT_ACCEPTABLE
+        );
     }
   }
 

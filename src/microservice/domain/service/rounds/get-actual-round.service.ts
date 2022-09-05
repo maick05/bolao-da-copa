@@ -1,5 +1,6 @@
+import { NotFoundException } from '@devseeder/microservices-exceptions';
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RoundsMongoose } from '../../../adapter/repository/rounds/rounds.repository';
 
 import { GetRoundDTO } from '../../model/dto/rounds/get-round.dto';
@@ -40,7 +41,7 @@ export class GetActualRoundService extends AbstractService {
       );
     }
 
-    if (round.length === 0) throw new NotFoundException('Round not found!');
+    if (round.length === 0) throw new NotFoundException('Round');
 
     return round[0];
   }

@@ -7,7 +7,7 @@ import { UpdateUserService } from '../../domain/service/users/update-user.servic
 import { UpdateUserDTO, UserDTO } from '../../domain/model/dto/users/user.dto';
 import { CreateUserService } from '../../domain/service/users/create-user.service';
 import { Scopes } from '@devseeder/nestjs-microservices-core';
-import { GetUser } from 'src/microservice/domain/decorators/get-user.decorator';
+import { GetUser } from '../../domain/decorators/get-user.decorator';
 
 @Controller('users')
 export class UsersController {

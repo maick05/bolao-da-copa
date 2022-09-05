@@ -1,6 +1,7 @@
 import { NotFoundException } from '@devseeder/microservices-exceptions';
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenActionException } from '../../../../core/exceptions/forbbiden-action.exception';
 import { UsersMongoose } from '../../../adapter/repository/users.repository';
 import { User } from '../../schemas/users.schema';
 
@@ -15,7 +16,7 @@ export abstract class UsersService extends AbstractService {
     if (!res) throw new NotFoundException('User');
 
     if (usernameToValidate.length > 0 && usernameToValidate !== res.username)
-      throw new ForbiddenException(
+      throw new ForbiddenActionException(
         'This user is not allowed to do this action'
       );
     return res;

@@ -3,6 +3,7 @@ import {
   Injectable,
   NotAcceptableException
 } from '@nestjs/common';
+import { ForbiddenActionException } from '../../../../core/exceptions/forbbiden-action.exception';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { League } from '../../schemas/leagues.schema';
 import { CreateUserService } from '../users/create-user.service';
@@ -38,7 +39,7 @@ export class GetLeagueService extends LeagueService {
     const league = await this.leagueRepository.getById(idLeague);
 
     if (user.id !== league.idUserAdm)
-      throw new ForbiddenException(
+      throw new ForbiddenActionException(
         'This user is not allowed to perform this action in this league, only the ADM can do it!'
       );
   }

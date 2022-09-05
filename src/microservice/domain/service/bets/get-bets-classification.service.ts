@@ -1,5 +1,5 @@
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { BetsMongoose } from '../../../adapter/repository/rounds/bets.repository';
 import { CompetitionsMongoose } from '../../../adapter/repository/competitions.repository';
 import {
@@ -10,6 +10,7 @@ import { Bet } from '../../schemas/rounds.schema';
 import { CreateUserService } from '../users/create-user.service';
 import { CalculateBetsScoreService } from './calculate-bets-score.service';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
+import { CustomErrorException } from '@devseeder/microservices-exceptions';
 
 @Injectable()
 export class GetBetsClassificationService extends AbstractService {
@@ -26,7 +27,12 @@ export class GetBetsClassificationService extends AbstractService {
   async getLeague(idLeague: number) {
     const league = await this.leaguesRepository.getById(idLeague);
 
-    if (!league) throw new NotFoundException('League Not Found!');
+    if (!league)
+      throw new CustomErrorException(
+        'League Not Found!',
+        HttpStatus.NOT_FOUND,
+        HttpStatus.NOT_FOUND
+      );
 
     return league;
   }
@@ -134,7 +140,11 @@ export class GetBetsClassificationService extends AbstractService {
   async getUserInfo(id: number): Promise<string> {
     const user = await this.usersService.getUserById(id);
     if (!user) {
-      throw new NotFoundException(`User not found!`);
+      throw new CustomErrorException(
+        'User Not Found!',
+        HttpStatus.NOT_FOUND,
+        HttpStatus.NOT_FOUND
+      );
     }
     return user.name;
   }

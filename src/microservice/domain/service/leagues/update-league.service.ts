@@ -1,4 +1,5 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import { CustomErrorException } from '@devseeder/microservices-exceptions';
+import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { UpdateLeagueDTO } from '../../model/dto/leagues/update-league.dto';
 import { CreateUserService } from '../users/create-user.service';
@@ -45,8 +46,9 @@ export class UpdateLeagueService extends LeagueService {
 
     userIds.forEach((userId) => {
       if (league.userIds.indexOf(userId) !== -1)
-        throw new NotAcceptableException(
-          `User '${userId}' already found in league`
+        throw new CustomErrorException(
+          `User '${userId}' already found in league`,
+          HttpStatus.NOT_ACCEPTABLE
         );
     });
 
@@ -68,8 +70,9 @@ export class UpdateLeagueService extends LeagueService {
 
     userIds.forEach((userId) => {
       if (league.userIds.indexOf(userId) == -1)
-        throw new NotAcceptableException(
-          `User '${userId}' not found in league`
+        throw new CustomErrorException(
+          `User '${userId}' not found in league`,
+          HttpStatus.NOT_ACCEPTABLE
         );
     });
 
