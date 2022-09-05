@@ -1,6 +1,12 @@
+import { CustomErrorException } from '@devseeder/microservices-exceptions';
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { HttpService } from '@nestjs/axios';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable
+} from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -34,7 +40,11 @@ export abstract class HttpClientService extends AbstractService {
       this.validateResponseStatus(response.data, response.status);
       return response;
     } catch (err) {
-      throw new HttpException(err.message, err.status);
+      throw new CustomErrorException(
+        err.response.data.message,
+        err.response.data.status,
+        err.response.data.errorCode
+      );
     }
   }
 
