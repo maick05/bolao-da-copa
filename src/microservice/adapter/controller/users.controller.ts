@@ -17,8 +17,6 @@ export class UsersController {
     private readonly updateUserService: UpdateUserService
   ) {}
 
-  @UseGuards(MyJwtAuthGuard)
-  @Scopes(EnumScopes.ADM)
   @Post('/create')
   createUser(@Body() user: UserDTO): Promise<any> {
     return this.createUserService.createUser(user);

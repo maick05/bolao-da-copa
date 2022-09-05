@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersMongoose } from '../../../adapter/repository/users.repository';
 import { UpdateUserDTO, UserDTO } from '../../model/dto/users/user.dto';
-import { User } from '../../schemas/users.schema';
 import { UsersService } from './user.service';
 
 @Injectable()
