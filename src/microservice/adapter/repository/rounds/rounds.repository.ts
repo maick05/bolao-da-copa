@@ -26,9 +26,7 @@ export class RoundsMongoose extends MongooseRepository<Round, RoundDocument> {
         'matches.scoreHome': { $gt: -1 },
         'matches.scoreOutside': { $gt: -1 }
       },
-      {
-        matches: 1
-      },
+      { id: 1, name: 1, matches: 1 },
       {},
       false
     );

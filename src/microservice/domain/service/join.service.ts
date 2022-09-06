@@ -2,11 +2,8 @@ import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { Injectable } from '@nestjs/common';
 import { TeamsMongoose } from '../../adapter/repository/teams.repository';
 import { UsersMongoose } from '../../adapter/repository/users.repository';
-import { BetsMongoose } from '../../adapter/repository/rounds/bets.repository';
-import { MatchesMongoose } from '../../adapter/repository/rounds/matches.repository';
 import { BetResponse, MatchResponse } from '../model/response/match.response';
 import { Bet, Match, Round } from '../schemas/rounds.schema';
-import { Team } from '../schemas/teams.schema';
 
 @Injectable()
 export class JoinService extends AbstractService {
@@ -28,6 +25,9 @@ export class JoinService extends AbstractService {
 
   async joinMatchesAndBets(matches: Match[]) {
     const arrMatches = [];
+
+    if (!matches) return [];
+
     for await (const match of matches) {
       const matchRes = new MatchResponse();
       Object.assign(matchRes, match);

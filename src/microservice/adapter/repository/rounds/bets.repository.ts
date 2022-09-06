@@ -40,7 +40,7 @@ export class BetsMongoose extends RoundsMongoose {
         }
       },
       {
-        'matches.bets': 1
+        matches: 1
       },
       {},
       false
@@ -70,6 +70,47 @@ export class BetsMongoose extends RoundsMongoose {
         $push: {
           'matches.$.bets': bet
         }
+      },
+      {
+        strict: false
+      }
+    );
+    this.logger.log(`Update Push Completed!`);
+  }
+
+  async updateBet(
+    idCompetition: number,
+    edition: number,
+    idRound: number,
+    idTeamHome: number,
+    idTeamOutside: number,
+    bet: Bet,
+    index: number
+  ) {
+    const updateAttr = `matches.$.bets.${index}`;
+    const objSet = {};
+    objSet[updateAttr] = bet;
+
+    bet.dateTime = new Date();
+    const res = await this.model.updateOne(
+      {
+        idCompetition,
+        edition,
+        id: idRound,
+        matches: {
+          $elemMatch: {
+            idTeamHome,
+            idTeamOutside,
+            bets: {
+              $elemMatch: {
+                idUser: bet.idUser
+              }
+            }
+          }
+        }
+      },
+      {
+        $set: objSet
       },
       {
         strict: false
