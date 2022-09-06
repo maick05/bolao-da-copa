@@ -142,6 +142,38 @@ export class BetsMongoose extends RoundsMongoose {
     return this.filterBetsMatch(res);
   }
 
+  async checkMatchBlockToBet(
+    idRound: number,
+    idCompetition: number,
+    edition: number,
+    idTeamHome: number,
+    idTeamOutside: number
+  ): Promise<any[]> {
+    const now = DateHelper.GetDateNow();
+    const res = await this.model.findOne(
+      {
+        id: idRound,
+        idCompetition,
+        edition,
+        matches: {
+          $elemMatch: {
+            idTeamHome,
+            idTeamOutside
+          }
+        }
+      },
+      { 'matches.$': 1 }
+    );
+
+    if (!res) return [];
+
+    return res?.matches.filter(
+      (item) =>
+        (item.scoreHome !== null && item.scoreOutside !== null) ||
+        new Date(item.date).getTime() <= new Date(now).getTime()
+    );
+  }
+
   async getBetsByMatchAndLeague(
     idRound: number,
     idTeamHome: number,

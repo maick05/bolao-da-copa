@@ -1,5 +1,6 @@
+import { CustomErrorException } from '@devseeder/microservices-exceptions';
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { BetsMongoose } from '../../../adapter/repository/rounds/bets.repository';
 import { MatchesMongoose } from '../../../adapter/repository/rounds/matches.repository';
 import { PushBetDTO } from '../../model/dto/bets/push-bet.dto';
@@ -20,6 +21,24 @@ export class PushBetService extends AbstractService {
   }
 
   async pushBet(betDTO: PushBetDTO) {
+    const matchCheck = await this.betsRepository.checkMatchBlockToBet(
+      betDTO.idRound,
+      betDTO.idCompetition,
+      betDTO.edition,
+      betDTO.idTeamHome,
+      betDTO.idTeamOutside
+    );
+
+    if (matchCheck.length > 0) {
+      throw new CustomErrorException(
+        'Is not possible, bet after the match start!',
+        HttpStatus.NOT_ACCEPTABLE,
+        406
+      );
+    }
+
+    console.log(matchCheck.length);
+
     const betsCheck = await this.betsRepository.getBetsByUserAndMatch(
       betDTO.idUser,
       betDTO.idRound,
@@ -34,7 +53,6 @@ export class PushBetService extends AbstractService {
     bet.scoreHome = betDTO.scoreHome;
     bet.scoreOutside = betDTO.scoreOutside;
     bet.scoreBet = [];
-    // if (true) return;
 
     if (betsCheck.length > 0) {
       return this.betsRepository.updateBet(
