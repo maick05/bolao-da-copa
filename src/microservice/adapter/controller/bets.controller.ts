@@ -79,14 +79,15 @@ export class BetsController {
 
   @UseGuards(MyJwtAuthGuard)
   @Scopes(EnumScopes.USER)
-  @Post('/match/:idCompetition/:edition')
+  @Post('/match/:idCompetition/:edition/:idLeague')
   getBetsMyMatch(
     @Param('idCompetition') idCompetition: number,
     @Param('edition') edition: number,
+    @Param('idLeague') idLeague: number,
     @Body() getDTO: GetBetsDTO
   ): Promise<any[]> {
     getDTO.idCompetition = idCompetition;
     getDTO.edition = edition;
-    return this.getBetsByMatchService.getBetsByMatch(getDTO);
+    return this.getBetsByMatchService.getBetsByMatchAndLeague(getDTO, idLeague);
   }
 }

@@ -7,6 +7,7 @@ import {
   Round,
   RoundDocument
 } from '../../../domain/schemas/rounds.schema';
+import { DateHelper } from '../../helper/date.helper';
 import { RoundsMongoose } from './rounds.repository';
 
 @Injectable()

@@ -5,6 +5,7 @@ import {
 import { AbstractService } from '@devseeder/nestjs-microservices-commons';
 import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
+import { League } from '../../schemas/leagues.schema';
 import { CreateUserService } from '../users/create-user.service';
 
 @Injectable()
@@ -33,8 +34,10 @@ export abstract class LeagueService extends AbstractService {
     }
   }
 
-  async validateLeague(id: number): Promise<void> {
+  async validateLeague(id: number): Promise<League> {
     const res = await this.leagueRepository.getById(id);
     if (!res) throw new NotFoundException('League');
+
+    return res[0];
   }
 }

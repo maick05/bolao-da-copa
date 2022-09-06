@@ -4,11 +4,13 @@ import { BetsMongoose } from '../../../adapter/repository/rounds/bets.repository
 import { GetBetsDTO } from '../../model/dto/bets/get-bets.dto';
 import { Bet } from '../../schemas/rounds.schema';
 import { JoinService } from '../join.service';
+import { GetLeagueService } from '../leagues/get-league.service';
 
 @Injectable()
 export class GetBetsMatchService extends AbstractService {
   constructor(
     protected readonly betsRepository: BetsMongoose,
+    protected readonly leagueService: GetLeagueService,
     protected readonly joinService: JoinService
   ) {
     super();
@@ -24,11 +26,19 @@ export class GetBetsMatchService extends AbstractService {
     return this.joinService.joinBets(matches);
   }
 
-  async getBetsByMatchAndLeague(betDTO: GetBetsDTO): Promise<Bet[]> {
-    const matches = await this.betsRepository.getBetsByMatch(
+  async getBetsByMatchAndLeague(
+    betDTO: GetBetsDTO,
+    idLeague: number
+  ): Promise<Bet[]> {
+    await this.leagueService.validateLeague(idLeague);
+
+    const league = await this.leagueService.getLeagueById(idLeague);
+
+    const matches = await this.betsRepository.getBetsByMatchAndLeague(
       betDTO.idRound,
       betDTO.idTeamHome,
-      betDTO.idTeamOutside
+      betDTO.idTeamOutside,
+      league.userIds
     );
 
     return this.joinService.joinBets(matches);
