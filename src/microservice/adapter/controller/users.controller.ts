@@ -38,6 +38,13 @@ export class UsersController {
 
   @UseGuards(MyJwtAuthGuard)
   @Scopes(EnumScopes.USER)
+  @Get('/email/:username')
+  getUserByUsername(@Param('username') username: string): Promise<User> {
+    return this.getUserService.getUserByEmail(username);
+  }
+
+  @UseGuards(MyJwtAuthGuard)
+  @Scopes(EnumScopes.USER)
   @Post('/update/:id')
   updateUserName(
     @Param('id') id: number,

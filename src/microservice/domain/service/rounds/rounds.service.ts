@@ -19,11 +19,19 @@ export class RoundsService extends AbstractService {
     });
 
     const matchesPlayed = matches.filter((match) => {
-      return match.scoreHome !== null && match.scoreOutside !== null;
+      return (
+        match.scoreHome !== null &&
+        match.scoreHome > -1 &&
+        match.scoreOutside !== null &&
+        match.scoreOutside > -1
+      );
     });
 
     const nextMatches = matches.filter((match) => {
-      return match.scoreHome == null && match.scoreOutside == null;
+      return (
+        (match.scoreHome == null || match.scoreHome == -1) &&
+        (match.scoreOutside == null || match.scoreOutside == -1)
+      );
     });
 
     return { idRound: round.id, name: round.name, matchesPlayed, nextMatches };

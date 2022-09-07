@@ -20,8 +20,7 @@ export class UsersMongoose extends MongooseRepository<User, UserDocument> {
 
   async getUserByEmail(username: string): Promise<User> {
     const result = await this.model.findOne({
-      username,
-      projectKey: { $in: ['BOLAO_DA_COPA', 'GLOBAL'] }
+      username
     });
     return result;
   }

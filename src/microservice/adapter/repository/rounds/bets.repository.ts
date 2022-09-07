@@ -170,7 +170,10 @@ export class BetsMongoose extends RoundsMongoose {
 
     return res?.matches.filter(
       (item) =>
-        (item.scoreHome !== null && item.scoreOutside !== null) ||
+        (item.scoreHome !== null &&
+          item.scoreHome > -1 &&
+          item.scoreOutside !== null &&
+          item.scoreOutside > -1) ||
         new Date(item.date).getTime() <= new Date(now).getTime()
     );
   }
