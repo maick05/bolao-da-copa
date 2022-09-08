@@ -106,6 +106,9 @@ export class GetBetsClassificationService extends AbstractService {
           const betFilter = bet.scoreBet.filter(
             (betScore) => betScore.idLeague == idLeague
           )[0];
+
+          if (!betFilter) return;
+
           arrSum[bet.idUser].points += betFilter.scoreBet;
           arrSum[bet.idUser].exactlyMatch += betFilter.exactlyMatch ? 1 : 0;
           arrSum[bet.idUser].oneScore += betFilter.oneScore ? 1 : 0;
