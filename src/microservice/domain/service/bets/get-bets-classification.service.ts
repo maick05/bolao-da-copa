@@ -11,6 +11,7 @@ import { CreateUserService } from '../users/create-user.service';
 import { CalculateBetsScoreService } from './calculate-bets-score.service';
 import { LeaguesMongoose } from '../../../adapter/repository/leagues.repository';
 import { CustomErrorException } from '@devseeder/microservices-exceptions';
+import { User } from '../../schemas/users.schema';
 
 @Injectable()
 export class GetBetsClassificationService extends AbstractService {
@@ -86,21 +87,21 @@ export class GetBetsClassificationService extends AbstractService {
   ): Promise<Array<any>> {
     const arrSum = {};
 
+    userIds.forEach((id) => {
+      arrSum[id] = {
+        points: 0,
+        exactlyMatch: 0,
+        winner: 0,
+        oneScore: 0
+      };
+    });
+
     bets
       .filter((bet) => bet.scoreBet.length > 0)
       .filter((bet) =>
         userIds.length > 0 ? userIds.indexOf(bet.idUser) !== -1 : true
       )
       .forEach((bet: Bet) => {
-        if (typeof arrSum[bet.idUser] == 'undefined') {
-          arrSum[bet.idUser] = {
-            points: 0,
-            exactlyMatch: 0,
-            winner: 0,
-            oneScore: 0
-          };
-        }
-
         if (idLeague > 0) {
           const betFilter = bet.scoreBet.filter(
             (betScore) => betScore.idLeague == idLeague
@@ -130,14 +131,17 @@ export class GetBetsClassificationService extends AbstractService {
     const response = [];
 
     for await (const itemUser of arrSumUser) {
-      itemUser.user = await this.getUserInfo(Number(itemUser.user));
+      const userInfo = await this.getUserInfo(Number(itemUser.user));
+      itemUser.user = userInfo.name;
+      itemUser.userId = userInfo.id;
+      itemUser.userEmail = userInfo.username;
       response.push(itemUser);
     }
 
     return arrSumUser;
   }
 
-  async getUserInfo(id: number): Promise<string> {
+  async getUserInfo(id: number): Promise<User> {
     const user = await this.usersService.getUserById(id);
     if (!user) {
       throw new CustomErrorException(
@@ -146,6 +150,6 @@ export class GetBetsClassificationService extends AbstractService {
         HttpStatus.NOT_FOUND
       );
     }
-    return user.name;
+    return user;
   }
 }

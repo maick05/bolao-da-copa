@@ -88,6 +88,13 @@ export class LeaguesController {
 
   @UseGuards(MyJwtAuthGuard)
   @Scopes(EnumScopes.USER)
+  @Get('/user/adm/:id')
+  getLeaguesByUserAdm(@Param('id') id: number): Promise<League[]> {
+    return this.getLeagueService.getLeaguesByUserAdm(id);
+  }
+
+  @UseGuards(MyJwtAuthGuard)
+  @Scopes(EnumScopes.USER)
   @Get('/user/:id')
   getLeaguesByUser(@Param('id') id: number): Promise<League[]> {
     return this.getLeagueService.getLeaguesByUserAdm(id);

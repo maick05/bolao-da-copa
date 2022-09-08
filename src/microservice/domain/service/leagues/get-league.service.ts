@@ -34,6 +34,11 @@ export class GetLeagueService extends LeagueService {
     return this.leagueRepository.getByUserAdm(idUser);
   }
 
+  async getLeaguesByUser(idUser: number): Promise<League[]> {
+    await this.validateUsers([idUser]);
+    return this.leagueRepository.getByUserId(idUser);
+  }
+
   async validateAdmLeague(username: string, idLeague: number) {
     const user = await this.getUserService.getUserByEmail(username);
     const league = await this.leagueRepository.getById(idLeague);
