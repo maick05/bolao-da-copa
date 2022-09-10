@@ -97,6 +97,6 @@ export class LeaguesController {
   @Scopes(EnumScopes.USER)
   @Get('/user/:id')
   getLeaguesByUser(@Param('id') id: number): Promise<League[]> {
-    return this.getLeagueService.getLeaguesByUserAdm(id);
+    return this.getLeagueService.getLeaguesByUser(id);
   }
 }

@@ -22,7 +22,8 @@ export class GetLeagueService extends LeagueService {
 
   async getLeagueById(id: number): Promise<League> {
     await this.validateLeague(id);
-    return this.leagueRepository.getById(id);
+    const league = await this.leagueRepository.getById(id);
+    return this.joinUsersLeague(league);
   }
 
   async getByUserId(id: number): Promise<League[]> {
@@ -36,7 +37,38 @@ export class GetLeagueService extends LeagueService {
 
   async getLeaguesByUser(idUser: number): Promise<League[]> {
     await this.validateUsers([idUser]);
-    return this.leagueRepository.getByUserId(idUser);
+    const leagues = await this.leagueRepository.getByUserId(idUser);
+    return this.joinAdmLeagues(leagues);
+  }
+
+  private async joinUsersLeague(league: League): Promise<League & any> {
+    const arrUser = [];
+    for await (const userId of league.userIds) {
+      const user = await this.getUserService.getUserById(userId);
+      arrUser.push({
+        id: userId,
+        name: user.name,
+        email: user.username
+      });
+    }
+
+    return {
+      ...league,
+      userADM: (await this.getUserService.getUserById(league.idUserAdm)).name,
+      users: arrUser
+    };
+  }
+
+  private async joinAdmLeagues(leagues: League[]) {
+    const arr = [];
+    for await (const league of leagues) {
+      arr.push({
+        ...league,
+        userAdm: (await this.getUserService.getUserById(league.idUserAdm)).name
+      });
+    }
+
+    return arr;
   }
 
   async validateAdmLeague(username: string, idLeague: number) {

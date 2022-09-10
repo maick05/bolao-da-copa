@@ -29,16 +29,24 @@ export class LeaguesMongoose extends MongooseRepository<
   }
 
   async getById(id: number): Promise<League> {
-    const result = await this.model.findOne({ id });
+    const result = await this.model
+      .findOne({ id })
+      .select({ id: 1, name: 1, rules: 1, userIds: 1, idUserAdm: 1 })
+      .lean()
+      .exec();
     return result;
   }
 
   async getByUserId(idUser: number): Promise<League[]> {
-    const result = await this.model.find({
-      userIds: {
-        $in: [idUser]
-      }
-    });
+    const result = await this.model
+      .find({
+        userIds: {
+          $in: [Number(idUser)]
+        }
+      })
+      .select({ id: 1, name: 1, idUserAdm: 1, userIds: 1, rules: 1 })
+      .lean()
+      .exec();
     return result;
   }
 
