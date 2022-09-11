@@ -62,8 +62,6 @@ export class UpdateLeagueService extends LeagueService {
   ): Promise<any> {
     await this.validateLeague(id);
 
-    await this.getLeagueService.validateAdmLeague(username, id);
-
     await this.validateUsers(userIds);
 
     const league = await this.leagueRepository.getById(id);

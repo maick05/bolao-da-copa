@@ -1,3 +1,4 @@
+import { NotFoundException } from '@devseeder/microservices-exceptions';
 import { Injectable } from '@nestjs/common';
 import { UsersMongoose } from '../../../adapter/repository/users.repository';
 import { User } from '../../schemas/users.schema';
@@ -14,7 +15,11 @@ export class GetUserService extends UsersService {
   }
 
   async getUserByEmail(email: string): Promise<User> {
-    return this.usersRepository.getUserByEmail(email);
+    const res = await this.usersRepository.getUserByEmail(email);
+    if (!res) {
+      throw new NotFoundException('User');
+    }
+    return res;
   }
 
   async searchUserByUsername(name: string): Promise<User[]> {
