@@ -38,7 +38,7 @@ export class CreateUserService extends UsersService {
     userAuth.username = user.username;
     userAuth.password = user.password;
     userAuth.projectKey = this.configService.get('doc.projectKey');
-    userAuth.scopes = [EnumScopes.USER];
+    userAuth.scopes = [EnumScopes.USER, EnumScopes.UPDATE_PASSWORD];
 
     const response = await this.clientAuthService.createUser(userAuth);
     return response.response.userId;
